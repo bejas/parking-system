@@ -22,7 +22,8 @@ export function isCar(arg: any): arg is Car {
 var carSchema = new mongoose.Schema({
     plate: {
         type: mongoose.SchemaTypes.String,
-        required: true
+        required: true,
+        unique: true
     },
     timestamp: {
         type: mongoose.SchemaTypes.Date,

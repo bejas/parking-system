@@ -6,3 +6,7 @@ node_modules/
 
 # MongoDB
 data/
+
+keys/
+*.js
+*.map
