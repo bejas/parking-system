@@ -18,7 +18,9 @@
         "passport-http": "0.3.0",
         "jsonwebtoken": "8.5.1",
         "express-jwt": "5.3.1",
-        "dotenv": "5.0.1"
+        "dotenv": "5.0.1",
+        "socket.io": "2.2.0",
+        "cors": "2.8.5"
     },
     "devDependencies": {
         "typescript": "3.5.3",

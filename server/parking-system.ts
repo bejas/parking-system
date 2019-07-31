@@ -12,9 +12,9 @@
  *   /cars/:plate     -                 DELETE          Remove a car from the parking garage
  *
  *   /users           -                 GET             List all users
- *   /users/:mail     -                 GET             Get user info by mail
+ *   /users/:username -                 GET             Get user info by username
  *   /users           -                 POST            Add a new user
- *   /users:username  -                 DELETE          Delete a user
+ *   /users/:username -                 DELETE          Delete a user
  *
  *   /login           -                 POST            Login an existing user, returning a JWT
  *
@@ -63,6 +63,11 @@ import passportHTTP = require("passport-http"); // implements Basic and Digest a
 import jsonwebtoken = require("jsonwebtoken"); // JWT generation
 import jwt = require("express-jwt"); // JWT parsing middleware for express
 
+import cors = require("cors");
+import io = require("socket.io");
+
+var ios = undefined;
+
 var app = express();
 
 // We create the JWT authentication middleware
@@ -72,6 +77,8 @@ var app = express();
 // If the token is valid, req.user will be set with the JSON object
 // decoded to be used by later middleware for authorization and access control.
 var auth = jwt({ secret: process.env.JWT_SECRET });
+
+app.use(cors());
 
 // Install the top-level middleware "bodyparser"
 app.use(bodyparser.json());
@@ -264,6 +271,19 @@ app.delete("/users/:username", auth, (req, res, next) => {
         });
 });
 
+app.get("/renew", auth, (req, res, next) => {
+    var tokendata = req.user;
+    delete tokendata.iat;
+    delete tokendata.exp;
+    console.log("Renewing token for user " + JSON.stringify(tokendata));
+    var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
+        expiresIn: "5m"
+    });
+    return res
+        .status(200)
+        .json({ error: false, errormessage: "", token: token_signed });
+});
+
 // Configure HTTP basic authentication strategy
 // trough passport middleware.
 
@@ -373,15 +393,24 @@ mongoose.connect("mongodb://localhost:27017/parking-system").then(
                 }
             });
 
-        https
-            .createServer(
-                {
-                    key: fs.readFileSync("keys/key.pem"),
-                    cert: fs.readFileSync("keys/cert.pem")
-                },
-                app
-            )
-            .listen(8443);
+        // https
+        //     .createServer(
+        //         {
+        //             key: fs.readFileSync("keys/key.pem"),
+        //             cert: fs.readFileSync("keys/cert.pem")
+        //         },
+        //         app
+        //     )
+        //     .listen(8443);
+
+        let server = http.createServer(app);
+        ios = io(server);
+        ios.on("connection", function(client) {
+            console.log("Socket.io client connected".green);
+        });
+        server.listen(8080, () =>
+            console.log("HTTP Server started on port 8080")
+        );
     },
     function onrejected() {
         console.log("Unable to connect to MongoDB");

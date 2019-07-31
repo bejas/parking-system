@@ -1,12 +1,6 @@
 # Mac OS
 .DS_Store
 
-# Node.js
-node_modules/
+express/data/
 
-# MongoDB
-data/
-
-keys/
-*.js
-*.map
+express/keys/

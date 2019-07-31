@@ -1,0 +1,12 @@
+# Mac OS
+.DS_Store
+
+# Node.js
+node_modules/
+
+# MongoDB
+data/
+
+keys/
+*.js
+*.map
