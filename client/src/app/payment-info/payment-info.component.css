@@ -1,0 +1,18 @@
+.paymentlogo {
+  width: 80px;
+  height: 80px;
+}
+
+body {
+  margin-top: 20px;
+}
+.panel-title {
+  display: inline;
+  font-weight: bold;
+}
+.checkbox.pull-right {
+  margin: 0;
+}
+.pl-ziro {
+  padding-left: 0px;
+}

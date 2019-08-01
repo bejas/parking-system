@@ -1,1 +1,71 @@
-<p>payment-info works!</p>
+<div *ngIf="car">
+
+    <div class="container" style="width: 400px; margin-top: 20px;">
+        <div class="text-center">
+
+            <!-- Nothing to pay -->
+            <div *ngIf="car.amountToPay == 0">
+                <i class="fas fa-check-circle paymentlogo"></i> <br><br>
+                <h1 class="h1 mb-3 font-weight-normal">{{car.plate}}</h1>
+                <p>You have 10 minutes to exit the parking lot.</p><br>
+                <p><a routerLink="/">Homepage</a></p>
+            </div>
+
+            <!-- There is an amount to pay -->
+            <div *ngIf="car.amountToPay != 0">
+                <i class="far fa-credit-card paymentlogo"></i> <br><br>
+                <h1 class="h1 mb-3 font-weight-normal">{{car.plate}}</h1>
+
+                <h1 class="h3 mb-3 font-weight-normal">
+                    <p>€ {{car.amountToPay}}</p>
+                </h1>
+
+
+
+                <div class="card-body p-5 border">
+                    <form>
+                        <div class="form-row ">
+                            <div class="col">
+                                <label for="inputNameOnCard" class="text-left">Name on Card</label>
+                                <input type="text" class="form-control text-center" id="inputNameOnCard"
+                                    placeholder="Name Surname"> <br>
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="col">
+                                <label for="inputCard" class="text-left">Card Number</label>
+                                <input type="text" class="form-control text-center" id="inputCard"
+                                    placeholder="Valid Card Number"> <br>
+                            </div>
+                        </div>
+
+                        <div class="form-row ">
+                            <div class="col">
+                                <label for="inputMonth" class="text-left">Month</label>
+                                <input type="text" class="form-control text-center" id="inputMonth" placeholder="MM">
+                            </div>
+                            <div class="col">
+                                <label for="inputYear" class="text-left">Year</label>
+                                <input type="text" class="form-control text-center" id="inputYear" placeholder="YYYY">
+                            </div>
+                            <div class="col">
+                                <label for="inputCVC" class="text-left">CVC</label>
+                                <input type="text" class="form-control text-center" id="inputCVC" placeholder="ex. 123">
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+
+                <br> <button (click)="makePayment()" type="button" class="btn btn-primary">Confirm Payment</button>
+
+            </div>
+
+
+            <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
+        </div>
+
+    </div>
+
+</div>

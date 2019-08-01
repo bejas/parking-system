@@ -51,9 +51,9 @@ var carSchema = new mongoose.Schema({
 
 // Methods for car
 carSchema.methods.makePayment = function() {
-    if (!this.timestamp_payment) {
+    this.getAmountToPay();
+    if (this.amountToPay != 0) {
         this.timestamp_payment = new Date();
-        console.log(new Date());
         return true;
     } else {
         return false;
