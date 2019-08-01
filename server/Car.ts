@@ -7,7 +7,9 @@ export interface Car extends mongoose.Document {
     timestamp_in: Date;
     timestamp_out: Date;
     timestamp_payment: Date;
+    amountToPay: number;
 
+    getAmountToPay: () => void;
     makePayment: () => boolean;
 }
 
@@ -40,6 +42,10 @@ var carSchema = new mongoose.Schema({
     timestamp_payment: {
         type: mongoose.SchemaTypes.Date,
         required: false
+    },
+    amountToPay: {
+        type: mongoose.SchemaTypes.Number,
+        required: false
     }
 });
 
@@ -47,9 +53,31 @@ var carSchema = new mongoose.Schema({
 carSchema.methods.makePayment = function() {
     if (!this.timestamp_payment) {
         this.timestamp_payment = new Date();
+        console.log(new Date());
         return true;
     } else {
         return false;
+    }
+};
+
+carSchema.methods.getAmountToPay = function() {
+    // Price for every minute.
+    const unitPrice = 1;
+
+    if (!this.timestamp_payment) {
+        var difference = this.timestamp_in.getTime() - new Date().getTime();
+        var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
+        this.amountToPay = differenceMinutes * unitPrice;
+    } else {
+        var difference =
+            this.timestamp_payment.getTime() - new Date().getTime();
+        var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
+
+        if (differenceMinutes > 10) {
+            this.amountToPay = differenceMinutes * unitPrice;
+        } else {
+            this.amountToPay = 0;
+        }
     }
 };
 

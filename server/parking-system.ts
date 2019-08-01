@@ -110,6 +110,9 @@ app.route("/cars")
             .skip(req.query.skip)
             .limit(req.query.limit)
             .then(documents => {
+                documents.forEach(function(element) {
+                    element.getAmountToPay();
+                });
                 return res.status(200).json(documents);
             })
             .catch(reason => {
@@ -152,7 +155,6 @@ app.route("/cars")
 //
 
 app.get("/payment/:plate", (req, res) => {
-    console.log(req.params);
     if (!req.params.plate) {
         res.status(404).json({
             statusCode: 404,
@@ -166,6 +168,8 @@ app.get("/payment/:plate", (req, res) => {
         car.getModel()
             .findOne({ plate: req.params.plate })
             .then(objFound => {
+                objFound.getAmountToPay();
+                console.log(JSON.stringify(objFound));
                 return res.status(200).json(objFound);
             })
             .catch(reason => {
