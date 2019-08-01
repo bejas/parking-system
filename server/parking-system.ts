@@ -11,6 +11,9 @@
  *   /cars            -                 POST            Inserts a new car in the parking garage
  *   /cars/:plate     -                 DELETE          Remove a car from the parking garage
  *
+ *   /payment/:plate  -                 GET             Get payment information about a specified car.
+ *   /payment/:plate  -                 POST            Send payment for the specified car.
+ *
  *   /users           -                 GET             List all users
  *   /users/:username -                 GET             Get user info by username
  *   /users           -                 POST            Add a new user
@@ -121,7 +124,7 @@ app.route("/cars")
         console.log("Inserted: " + JSON.stringify(req.body));
 
         var insertedCar = req.body;
-        insertedCar.timestamp = new Date();
+        insertedCar.timestamp_in = new Date();
 
         if (car.isCar(insertedCar)) {
             car.getModel()
@@ -147,6 +150,64 @@ app.route("/cars")
         }
     });
 //
+
+app.get("/payment/:plate", (req, res) => {
+    console.log(req.params);
+    if (!req.params.plate) {
+        res.status(404).json({
+            statusCode: 404,
+            error: true,
+            errorMessage: "Insert a valid licence plate number"
+        });
+    } else {
+        var filter = { plate: req.params.plate };
+        console.log("Using filter: " + JSON.stringify(filter));
+
+        car.getModel()
+            .findOne({ plate: req.params.plate })
+            .then(objFound => {
+                return res.status(200).json(objFound);
+            })
+            .catch(reason => {
+                res.status(404).json({
+                    statusCode: 404,
+                    error: true,
+                    errorMessage: "DB error: " + reason
+                });
+            });
+    }
+});
+
+app.post("/payment/:plate", (req, res) => {
+    console.log(req.params);
+    if (!req.params.plate) {
+        res.status(404).json({
+            statusCode: 404,
+            error: true,
+            errorMessage: "Insert a valid licence plate number"
+        });
+    } else {
+        var filter = { plate: req.params.plate };
+        console.log("Using filter: " + JSON.stringify(filter));
+
+        car.getModel().findOne({ plate: req.params.plate }, (err, objFound) => {
+            var result = objFound.makePayment();
+
+            if (result) {
+                objFound.save();
+                res.status(200).json({
+                    error: false,
+                    errorMessage: ""
+                });
+            } else {
+                res.status(404).json({
+                    error: true,
+                    errorMessage: "Payment already done."
+                });
+            }
+        });
+    }
+});
 
 app.delete("/cars/:plate", auth, (req, res, next) => {
     // Check moderator role
@@ -182,7 +243,7 @@ app.get("/users", auth, (req, res, next) => {
             return next({
                 statusCode: 404,
                 error: true,
-                errormessage: "DB error: " + reason
+                errorMessage: "DB error: " + reason
             });
         });
 });
@@ -198,7 +259,7 @@ app.get("/users/:username", auth, (req, res, next) => {
             return next({
                 statusCode: 404,
                 error: true,
-                errormessage: "DB error: " + reason
+                errorMessage: "DB error: " + reason
             });
         });
 });
@@ -209,7 +270,7 @@ app.post("/users", auth, (req, res, next) => {
         return next({
             statusCode: 404,
             error: true,
-            errormessage: "Unauthorized: User is not an Admininstrator."
+            errorMessage: "Unauthorized: User is not an Admininstrator."
         });
     }
 
@@ -218,7 +279,7 @@ app.post("/users", auth, (req, res, next) => {
         return next({
             statusCode: 404,
             error: true,
-            errormessage: "Password field is missing."
+            errorMessage: "Password field is missing."
         });
     }
     u.setPassword(req.body.password);
@@ -227,13 +288,13 @@ app.post("/users", auth, (req, res, next) => {
         .then(data => {
             return res
                 .status(200)
-                .json({ error: false, errormessage: "", id: data._id });
+                .json({ error: false, errorMessage: "", id: data._id });
         })
         .catch(reason => {
             return next({
                 statusCode: 404,
                 error: true,
-                errormessage: "DB error: " + reason
+                errorMessage: "DB error: " + reason
             });
         });
 });
@@ -281,7 +342,7 @@ app.get("/renew", auth, (req, res, next) => {
     });
     return res
         .status(200)
-        .json({ error: false, errormessage: "", token: token_signed });
+        .json({ error: false, errorMessage: "", token: token_signed });
 });
 
 // Configure HTTP basic authentication strategy

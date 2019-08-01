@@ -1,2 +1,28 @@
-<p>payment works!</p>
-<button (click)="userLogin()">user-login</button>
+<div class="container" style="width: 400px; margin-top: 20px;">
+    <div class="form-signin text-center loginform">
+
+        <i class="fas fa-car paymentlogo"></i>
+
+        <h1 class="h3 mb-3 font-weight-normal">Payment Area</h1>
+        <p>Please fill the form with you licence plate to make a payment.</p>
+
+        <label for="inputPlate" class="sr-only">Plate number</label>
+        <input type="text" #platetxt id="inputPlate" class="form-control" placeholder="Plate Number" required autofocus>
+
+
+        <button class="btn btn-lg btn-primary btn-block" (click)="getCar(platetxt.value);">
+            Submit
+        </button>
+
+        <br>
+
+        <p><a routerLink="/login">Member's Area</a></p>
+
+        <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
+    </div>
+
+</div>
+
+
+
+<!-- <button (click)="userLogin()">user-login</button> -->

@@ -11,7 +11,11 @@ export class PaymentComponent implements OnInit {
 
   ngOnInit() {}
 
-  userLogin() {
-    this.router.navigate(["/login"]);
+  getCar(plateNumber: string) {
+    console.log(plateNumber);
   }
+
+  // userLogin() {
+  //   this.router.navigate(["/login"]);
+  // }
 }

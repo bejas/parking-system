@@ -2,9 +2,13 @@ import mongoose = require("mongoose");
 
 // Car interface
 // A car has a licence plate and a timestamp
-export interface Car {
+export interface Car extends mongoose.Document {
     plate: string[];
-    timestamp: Date;
+    timestamp_in: Date;
+    timestamp_out: Date;
+    timestamp_payment: Date;
+
+    makePayment: () => boolean;
 }
 
 // JSON schema to check if the supplied parameter is compatible
@@ -13,8 +17,8 @@ export function isCar(arg: any): arg is Car {
         arg &&
         arg.plate &&
         typeof arg.plate == "string" &&
-        arg.timestamp &&
-        arg.timestamp instanceof Date
+        arg.timestamp_in &&
+        arg.timestamp_in instanceof Date
     );
 }
 
@@ -25,11 +29,29 @@ var carSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    timestamp: {
+    timestamp_in: {
         type: mongoose.SchemaTypes.Date,
         required: true
+    },
+    timestamp_out: {
+        type: mongoose.SchemaTypes.Date,
+        required: false
+    },
+    timestamp_payment: {
+        type: mongoose.SchemaTypes.Date,
+        required: false
     }
 });
+
+// Methods for car
+carSchema.methods.makePayment = function() {
+    if (!this.timestamp_payment) {
+        this.timestamp_payment = new Date();
+        return true;
+    } else {
+        return false;
+    }
+};
 
 export function getSchema() {
     return carSchema;
@@ -37,7 +59,7 @@ export function getSchema() {
 
 // Mongoose Model
 var carModel;
-export function getModel(): mongoose.Model<mongoose.Document> {
+export function getModel(): mongoose.Model<Car> {
     if (!carModel) {
         carModel = mongoose.model("Car", getSchema());
     }

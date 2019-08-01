@@ -1,8 +1,10 @@
 <div class="container" style="width: 400px; margin-top: 20px;">
     <div class="form-signin text-center loginform ">
-        <i class="fas fa-envelope loginlogo"></i>
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <i class="fas fa-lock loginlogo"></i>
+
+        <h1 class="h3 mb-3 font-weight-normal">Please Authenticate Yourself</h1>
+        <p>This is a reserved area.</p>
 
         <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" #mailtxt id="inputEmail" class="form-control" placeholder="Email address" required
@@ -23,8 +25,9 @@
 
         <button class="btn btn-lg btn-primary btn-block"
             (click)="login( mailtxt.value, passwdtxt.value, checkr.checked );">Sign in</button>
-        <p><a routerLink="/signup">Sign-up new user</a></p>
+        <br>
+        <p><a routerLink="/payment">Back to Payment Area</a></p>
 
-        <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
+        <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>
     </div>
 </div>
