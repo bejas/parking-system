@@ -111,7 +111,7 @@ app.route("/cars")
             .limit(req.query.limit)
             .then(documents => {
                 documents.forEach(function(element) {
-                    element.getAmountToPay();
+                    element.amountToPay = element.getAmountToPay();
                 });
                 return res.status(200).json(documents);
             })

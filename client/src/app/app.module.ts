@@ -16,7 +16,7 @@ import { CarsComponent } from "./cars/cars.component";
 import { UserService } from "./user.service";
 import { UserHttpService } from "./user-http.service";
 import { SocketioService } from "./socketio.service";
-import { PaymentInfoComponent } from './payment-info/payment-info.component';
+import { PaymentInfoComponent } from "./payment-info/payment-info.component";
 
 @NgModule({
   declarations: [

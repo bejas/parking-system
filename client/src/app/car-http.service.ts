@@ -1,14 +1,20 @@
 import { Injectable } from "@angular/core";
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { tap } from "rxjs/operators";
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpParams,
+  HttpErrorResponse
+} from "@angular/common/http";
+import { tap, catchError } from "rxjs/operators";
 import { Observable } from "rxjs";
 import { Car } from "./Car";
+import { UserService } from "./user.service";
 
 @Injectable({
   providedIn: "root"
 })
 export class CarHttpService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private us: UserService) {
     console.log("Car service instatiated");
   }
 
@@ -47,5 +53,25 @@ export class CarHttpService {
         console.log(JSON.stringify(data));
       })
     );
+  }
+
+  private create_options(params = {}) {
+    return {
+      headers: new HttpHeaders({
+        authorization: "Bearer " + this.us.get_token(),
+        "cache-control": "no-cache",
+        "Content-Type": "application/json"
+      }),
+      params: new HttpParams({ fromObject: params })
+    };
+  }
+
+  get_cars(): Observable<Car[]> {
+    return this.http
+      .get<Car[]>(
+        this.us.url + "/cars",
+        this.create_options({ limit: "10", skip: "0" })
+      )
+      .pipe(tap(data => console.log(JSON.stringify(data))));
   }
 }
