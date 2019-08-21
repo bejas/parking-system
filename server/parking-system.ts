@@ -456,6 +456,19 @@ mongoose.connect("mongodb://localhost:27017/parking-system").then(
                         });
                 }
             });
+        car.getModel()
+            .count({})
+            .then(count => {
+                if (count == 0) {
+                    var c = { plate: "ABC1234", timestamp_in: new Date() };
+
+                    car.getModel()
+                        .create(c)
+                        .then(data => {
+                            console.log("Inserted Car with plate nr: ABC1234");
+                        });
+                }
+            });
 
         // https
         //     .createServer(
