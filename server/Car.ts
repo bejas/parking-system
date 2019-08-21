@@ -1,7 +1,7 @@
 import mongoose = require("mongoose");
 
 // Car interface
-// A car has a licence plate and a timestamp
+// A car has a licence plate and a timestamp_in
 export interface Car extends mongoose.Document {
     plate: string[];
     timestamp_in: Date;
@@ -9,7 +9,7 @@ export interface Car extends mongoose.Document {
     timestamp_payment: Date;
     amountToPay: number;
 
-    getAmountToPay: () => void;
+    getAmountToPay: () => number;
     makePayment: () => boolean;
 }
 
@@ -51,8 +51,7 @@ var carSchema = new mongoose.Schema({
 
 // Methods for car
 carSchema.methods.makePayment = function() {
-    this.getAmountToPay();
-    if (this.amountToPay != 0) {
+    if (this.getAmountToPay() != 0) {
         this.timestamp_payment = new Date();
         return true;
     } else {
@@ -65,18 +64,22 @@ carSchema.methods.getAmountToPay = function() {
     const unitPrice = 1;
 
     if (!this.timestamp_payment) {
+        // payment has not made
         var difference = this.timestamp_in.getTime() - new Date().getTime();
         var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
-        this.amountToPay = differenceMinutes * unitPrice;
+        return differenceMinutes * unitPrice;
     } else {
+        // payment has made
         var difference =
             this.timestamp_payment.getTime() - new Date().getTime();
         var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
 
         if (differenceMinutes > 10) {
-            this.amountToPay = differenceMinutes * unitPrice;
+            // 10 minutes elapsed
+            return differenceMinutes * unitPrice;
         } else {
-            this.amountToPay = 0;
+            // 10 minutes not elapsed
+            return 0;
         }
     }
 };

@@ -12,11 +12,11 @@ export class CarHttpService {
     console.log("Car service instatiated");
   }
 
-  // public url = "http://localhost:8080";
-  public url = "http://192.168.1.50:8080";
+  public url = "http://localhost:8080";
+  //public url = "http://192.168.1.50:8080";
 
   getCarInfo(plate: string): Observable<Car> {
-    console.log("Get car info" + plate);
+    console.log("Get car info for plate: " + plate);
 
     const options = {
       headers: new HttpHeaders({

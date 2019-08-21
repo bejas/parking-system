@@ -162,14 +162,15 @@ app.get("/payment/:plate", (req, res) => {
             errorMessage: "Insert a valid licence plate number"
         });
     } else {
-        var filter = { plate: req.params.plate };
-        console.log("Using filter: " + JSON.stringify(filter));
-
+        console.log(
+            "GET Payment for plate: " + JSON.stringify(req.params.plate)
+        );
         car.getModel()
             .findOne({ plate: req.params.plate })
             .then(objFound => {
-                objFound.getAmountToPay();
-                console.log(JSON.stringify(objFound));
+                console.log("Found: " + JSON.stringify(objFound));
+                objFound.amountToPay = objFound.getAmountToPay();
+                console.log("With Payment info: " + JSON.stringify(objFound));
                 return res.status(200).json(objFound);
             })
             .catch(reason => {
@@ -183,7 +184,6 @@ app.get("/payment/:plate", (req, res) => {
 });
 
 app.post("/payment/:plate", (req, res) => {
-    console.log(req.params);
     if (!req.params.plate) {
         res.status(404).json({
             statusCode: 404,
@@ -191,12 +191,11 @@ app.post("/payment/:plate", (req, res) => {
             errorMessage: "Insert a valid licence plate number"
         });
     } else {
-        var filter = { plate: req.params.plate };
-        console.log("Using filter: " + JSON.stringify(filter));
-
+        console.log(
+            "POST Payment for plate: " + JSON.stringify(req.params.plate)
+        );
         car.getModel().findOne({ plate: req.params.plate }, (err, objFound) => {
             var result = objFound.makePayment();
-
             if (result) {
                 objFound.save();
                 res.status(200).json({

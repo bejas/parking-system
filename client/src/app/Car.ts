@@ -7,7 +7,7 @@ export interface Car {
   timestamp_payment: Date;
   amountToPay: number;
 
-  getAmountToPay: () => void;
+  getAmountToPay: () => number;
   makePayment: () => boolean;
 }
 
