@@ -12,6 +12,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class CarsComponent implements OnInit {
   private cars: Car[] = [];
+  public queryParams: Object;
 
   constructor(
     private sio: SocketioService,
@@ -22,9 +23,9 @@ export class CarsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
-      console.log(params);
-    });
+    // get query params
+    this.queryParams = this.route.snapshot.queryParams;
+
     this.get_cars();
     this.sio.connect().subscribe(m => {
       this.get_cars();
@@ -34,7 +35,7 @@ export class CarsComponent implements OnInit {
   //{ limit: "10", skip: "0" }
 
   public get_cars() {
-    this.cs.get_cars().subscribe(
+    this.cs.get_cars(this.queryParams).subscribe(
       cars => {
         this.cars = cars;
       },

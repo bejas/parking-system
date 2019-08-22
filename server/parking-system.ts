@@ -5,11 +5,12 @@
  *
  *   /                -                 GET             Returns the version and a list of available endpoints
  *
- *   /cars          ?plate=             GET             Returns all the cars inside the parking garage, optionally filtered by plate number
+ *   /cars          ?plate=             GET             Returns all the cars, optionally filtered by plate number
  *                  ?skip=n
  *                  ?limit=m
  *   /cars            -                 POST            Inserts a new car in the parking garage
- *   /cars/:plate     -                 DELETE          Remove a car from the parking garage
+ *   /cars/:plate     -                 PATCH           Remove a car from the parking garage
+ *   /cars/:plate     -                 DELETE          Delete a car from all history
  *
  *   /payment/:plate  -                 GET             Get payment information about a specified car.
  *   /payment/:plate  -                 POST            Send payment for the specified car.
@@ -107,6 +108,7 @@ app.route("/cars")
 
         car.getModel()
             .find(filter)
+            .sort({ timestamp_in: -1 })
             .skip(req.query.skip)
             .limit(req.query.limit)
             .then(documents => {
@@ -130,12 +132,38 @@ app.route("/cars")
         insertedCar.timestamp_in = new Date();
 
         if (car.isCar(insertedCar)) {
+            // Check if car is already inside parking lot.
             car.getModel()
-                .create(insertedCar)
-                .then(data => {
-                    return res
-                        .status(200)
-                        .json({ error: false, errorMessage: "", id: data._id });
+                .find({ plate: insertedCar.plate })
+                .sort({ timestamp_in: -1 })
+                .limit(1)
+                .then(objFound => {
+                    console.log(objFound);
+                    var firstCar = objFound.shift();
+                    if (firstCar && !firstCar.timestamp_out) {
+                        return next({
+                            statusCode: 404,
+                            error: true,
+                            errorMessage: "Car already inside the parking lot."
+                        });
+                    } else {
+                        car.getModel()
+                            .create(insertedCar)
+                            .then(data => {
+                                return res.status(200).json({
+                                    error: false,
+                                    errorMessage: "",
+                                    id: data._id
+                                });
+                            })
+                            .catch(reason => {
+                                return next({
+                                    statusCode: 404,
+                                    error: true,
+                                    errorMessage: "DB error: " + reason
+                                });
+                            });
+                    }
                 })
                 .catch(reason => {
                     return next({
@@ -166,12 +194,15 @@ app.get("/payment/:plate", (req, res) => {
             "GET Payment for plate: " + JSON.stringify(req.params.plate)
         );
         car.getModel()
-            .findOne({ plate: req.params.plate })
+            .find({ plate: req.params.plate })
+            .sort({ timestamp_in: -1 })
+            .limit(1)
             .then(objFound => {
-                console.log("Found: " + JSON.stringify(objFound));
-                objFound.amountToPay = objFound.getAmountToPay();
-                console.log("With Payment info: " + JSON.stringify(objFound));
-                return res.status(200).json(objFound);
+                var firstCar = objFound.shift();
+                console.log("Found: " + JSON.stringify(firstCar));
+                firstCar.amountToPay = firstCar.getAmountToPay();
+                console.log("With Payment info: " + JSON.stringify(firstCar));
+                return res.status(200).json(firstCar);
             })
             .catch(reason => {
                 res.status(404).json({
@@ -194,21 +225,36 @@ app.post("/payment/:plate", (req, res) => {
         console.log(
             "POST Payment for plate: " + JSON.stringify(req.params.plate)
         );
-        car.getModel().findOne({ plate: req.params.plate }, (err, objFound) => {
-            var result = objFound.makePayment();
-            if (result) {
-                objFound.save();
-                res.status(200).json({
-                    error: false,
-                    errorMessage: ""
-                });
-            } else {
+
+        car.getModel()
+            .find({ plate: req.params.plate })
+            .sort({ timestamp_in: -1 })
+            .limit(1)
+            .then(objFound => {
+                var firstCar = objFound.shift();
+
+                var result = firstCar.makePayment();
+
+                if (result) {
+                    firstCar.save();
+                    res.status(200).json({
+                        error: false,
+                        errorMessage: ""
+                    });
+                } else {
+                    res.status(404).json({
+                        error: true,
+                        errorMessage: "Payment already done."
+                    });
+                }
+            })
+            .catch(reason => {
                 res.status(404).json({
+                    statusCode: 404,
                     error: true,
-                    errorMessage: "Payment already done."
+                    errorMessage: "DB error: " + reason
                 });
-            }
-        });
+            });
     }
 });
 
@@ -229,6 +275,48 @@ app.delete("/cars/:plate", auth, (req, res, next) => {
         })
         .catch(reason => {
             return next({
+                statusCode: 404,
+                error: true,
+                errorMessage: "DB error: " + reason
+            });
+        });
+});
+
+app.patch("/cars/:plate", auth, (req, res, next) => {
+    // Check moderator role
+    if (!user.newUser(req.user).hasModeratorRole()) {
+        return next({
+            statusCode: 404,
+            error: true,
+            errorMessage: "Unauthorized: user is not a Moderator."
+        });
+    }
+
+    car.getModel()
+        .find({ plate: req.params.plate })
+        .sort({ timestamp_in: -1 })
+        .limit(1)
+        .then(objFound => {
+            var firstCar = objFound.shift();
+
+            if (firstCar.getAmountToPay() == 0) {
+                firstCar.timestamp_out = new Date();
+                firstCar.save();
+                res.status(200).json({
+                    error: false,
+                    errorMessage: ""
+                });
+            } else {
+                res.status(404).json({
+                    error: true,
+                    errorMessage: "Payment haven't made yet."
+                });
+            }
+
+            return res.status(200).json(firstCar);
+        })
+        .catch(reason => {
+            res.status(404).json({
                 statusCode: 404,
                 error: true,
                 errorMessage: "DB error: " + reason

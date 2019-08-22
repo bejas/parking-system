@@ -28,8 +28,7 @@ export function isCar(arg: any): arg is Car {
 var carSchema = new mongoose.Schema({
     plate: {
         type: mongoose.SchemaTypes.String,
-        required: true,
-        unique: true
+        required: true
     },
     timestamp_in: {
         type: mongoose.SchemaTypes.Date,
@@ -61,7 +60,12 @@ carSchema.methods.makePayment = function() {
 
 carSchema.methods.getAmountToPay = function() {
     // Price for every minute.
-    const unitPrice = 1;
+    const unitPrice = 1.17;
+    const minutesToExit = 1;
+
+    if (this.timestamp_out) {
+        return 0;
+    }
 
     if (!this.timestamp_payment) {
         // payment has not made
@@ -74,9 +78,9 @@ carSchema.methods.getAmountToPay = function() {
             this.timestamp_payment.getTime() - new Date().getTime();
         var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
 
-        if (differenceMinutes > 10) {
+        if (differenceMinutes > minutesToExit) {
             // 10 minutes elapsed
-            return differenceMinutes * unitPrice;
+            return (differenceMinutes - minutesToExit) * unitPrice;
         } else {
             // 10 minutes not elapsed
             return 0;

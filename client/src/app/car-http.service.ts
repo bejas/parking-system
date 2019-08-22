@@ -65,6 +65,7 @@ export class CarHttpService {
       params: new HttpParams({ fromObject: params })
     };
   }
+  //{ limit: "10", skip: "0" }
 
   get_cars(params = {}): Observable<Car[]> {
     return this.http

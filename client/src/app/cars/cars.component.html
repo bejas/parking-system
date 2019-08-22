@@ -23,12 +23,12 @@
     </div>
 </nav>
 
-<div *ngFor="let car of cars.reverse()" class="card mx-auto" style="margin: 5px; width: 350px; ">
+<div *ngFor="let car of cars" class="card mx-auto" style="margin: 5px; width: 350px; ">
     <div class="card-body text-center">
         <h2 class="card-title text-center">{{car.plate}}</h2>
         <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid"></ng-container>
         <ng-template #stillNotPaid>
-            <h5 class="card-subtitle mb-2">€ {{car.amountToPay}}</h5>
+            <h5 class="card-subtitle mb-2">€ {{car.amountToPay.toFixed(2)}}</h5>
         </ng-template>
         <ng-template #alreadyPaid>
             <h5 class="card-subtitle mb-2"><i class="fas fa-check-circle" style="color: limegreen"></i></h5>
@@ -36,7 +36,7 @@
         <br>
         <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-in-alt"></i> {{car.timestamp_in | date}} /
             {{car.timestamp_in | date:'shortTime'}}</h6>
-        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-out-alt"></i>{{car.timestamp_out | date}} /
+        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-out-alt"></i> {{car.timestamp_out | date}} /
             {{car.timestamp_out | date:'shortTime'}}</h6>
     </div>
 </div>
