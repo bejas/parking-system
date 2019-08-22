@@ -66,12 +66,9 @@ export class CarHttpService {
     };
   }
 
-  get_cars(): Observable<Car[]> {
+  get_cars(params = {}): Observable<Car[]> {
     return this.http
-      .get<Car[]>(
-        this.us.url + "/cars",
-        this.create_options({ limit: "10", skip: "0" })
-      )
+      .get<Car[]>(this.us.url + "/cars", this.create_options(params))
       .pipe(tap(data => console.log(JSON.stringify(data))));
   }
 }
