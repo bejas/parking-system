@@ -108,7 +108,7 @@ app.route("/cars")
         console.log("Using filter: " + JSON.stringify(filter));
 
         req.query.skip = parseInt(req.query.skip || "0") || 0;
-        req.query.limit = parseInt(req.query.limit || "5") || 5;
+        req.query.limit = parseInt(req.query.limit || "0") || 0;
 
         car.getModel()
             .find(filter)

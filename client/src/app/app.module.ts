@@ -18,6 +18,7 @@ import { UserHttpService } from "./user-http.service";
 import { SocketioService } from "./socketio.service";
 import { PaymentInfoComponent } from "./payment-info/payment-info.component";
 import { CarHttpService } from "./car-http.service";
+import { JwPaginationComponent } from "jw-angular-pagination";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { CarHttpService } from "./car-http.service";
     PaymentComponent,
     AdminPanelComponent,
     CarsComponent,
-    PaymentInfoComponent
+    PaymentInfoComponent,
+    JwPaginationComponent
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [

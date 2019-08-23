@@ -15,6 +15,8 @@ export class CarsComponent implements OnInit {
   private cars: Car[] = [];
   public queryParams;
 
+  pageOfItems: Array<Car>;
+
   constructor(
     private sio: SocketioService,
     private cs: CarHttpService,
@@ -22,6 +24,11 @@ export class CarsComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
+  onChangePage(pageOfItems: Array<Car>) {
+    // update current page of items
+    this.pageOfItems = pageOfItems;
+  }
 
   ngOnInit() {
     //console.log(this.us.get_mail());
