@@ -69,6 +69,10 @@ export class CarsComponent implements OnInit {
     );
   }
 
+  search(plate) {
+    this.router.navigate(["/cars"], { queryParams: { plate: plate } });
+  }
+
   logout() {
     this.us.logout();
     this.router.navigate(["/"]);

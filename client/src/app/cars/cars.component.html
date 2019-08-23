@@ -23,9 +23,10 @@
                 <a class="nav-link" (click)="logout()" style="cursor: pointer;">Logout</a>
             </li>
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <form class="form-inline my-2 my-lg-0" action="/cars">
+            <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                (click)="search(searchtxt.value)">Search</button>
         </form>
     </div>
 </nav>
@@ -33,7 +34,7 @@
 
 
 <div class="card text-center m-3">
-    <h3 class="card-header">Angular 8 Pagination Example</h3>
+    <h3 class="card-header">TITLE</h3>
     <div class="card-body">
         <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 5px; width: 350px; ">
             <div class="card-body text-center">
