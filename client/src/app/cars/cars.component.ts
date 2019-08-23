@@ -13,7 +13,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class CarsComponent implements OnInit {
   private cars: Car[] = [];
-  public queryParams: Object;
+  public queryParams;
 
   constructor(
     private sio: SocketioService,

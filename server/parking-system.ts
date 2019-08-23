@@ -8,6 +8,7 @@
  *   /cars          ?plate=             GET             Returns all the cars, optionally filtered by plate number
  *                  ?skip=n
  *                  ?limit=m
+ *                  ?inside=true
  *   /cars            -                 POST            Inserts a new car in the parking garage
  *   /cars/:plate     -                 PATCH           Remove a car from the parking garage
  *   /cars/:plate     -                 DELETE          Delete a car from all history
@@ -101,10 +102,13 @@ app.route("/cars")
         if (req.query.plate) {
             filter = { plate: req.query.plate };
         }
+        if (req.query.inside == "true") {
+            filter["timestamp_out"] = "";
+        }
         console.log("Using filter: " + JSON.stringify(filter));
 
         req.query.skip = parseInt(req.query.skip || "0") || 0;
-        req.query.limit = parseInt(req.query.limit || "20") || 20;
+        req.query.limit = parseInt(req.query.limit || "5") || 5;
 
         car.getModel()
             .find(filter)

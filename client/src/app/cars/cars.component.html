@@ -10,7 +10,7 @@
                 <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Still Inside</a>
+                <a class="nav-link" href="/cars?inside=true">Still Inside</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#">Disabled</a>
@@ -41,9 +41,9 @@
             <h5 class="card-subtitle mb-2"><i class="fas fa-check-circle" style="color: limegreen"></i></h5>
         </ng-template>
         <br>
-        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-in-alt"></i> {{car.timestamp_in | date}} /
+        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-in-alt"></i> {{car.timestamp_in | date}} -
             {{car.timestamp_in | date:'shortTime'}}</h6>
-        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-out-alt"></i> {{car.timestamp_out | date}} /
+        <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-out-alt"></i> {{car.timestamp_out | date}} -
             {{car.timestamp_out | date:'shortTime'}}</h6>
     </div>
 </div>
