@@ -7,7 +7,7 @@ import {
 } from "@angular/common/http";
 import { tap, catchError } from "rxjs/operators";
 import { Observable, from, throwError } from "rxjs";
-import { jwtdecode } from "jwt-decode";
+import * as jwtdecode from "jwt-decode";
 
 @Injectable({
   providedIn: "root"
@@ -88,6 +88,9 @@ export class UserHttpService {
   }
 
   get_token() {
+    // setTimeout(() => {
+    //   console.log(jwtdecode(this.token));
+    // }, 1000);
     return this.token;
   }
 

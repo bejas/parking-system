@@ -17,6 +17,7 @@ import { UserService } from "./user.service";
 import { UserHttpService } from "./user-http.service";
 import { SocketioService } from "./socketio.service";
 import { PaymentInfoComponent } from "./payment-info/payment-info.component";
+import { CarHttpService } from "./car-http.service";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { PaymentInfoComponent } from "./payment-info/payment-info.component";
   providers: [
     { provide: LoggerService, useClass: LoggerService },
     { provide: UserService, useClass: UserHttpService },
-    { provide: SocketioService, useClass: SocketioService }
+    { provide: SocketioService, useClass: SocketioService },
+    { provide: CarHttpService, useClass: CarHttpService }
   ],
   bootstrap: [AppComponent]
 })

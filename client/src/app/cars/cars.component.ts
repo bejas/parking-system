@@ -4,6 +4,7 @@ import { UserService } from "../user.service";
 import { CarHttpService } from "../car-http.service";
 import { Car } from "../Car";
 import { Router, ActivatedRoute } from "@angular/router";
+// import { CarService } from "../car.service";
 
 @Component({
   selector: "app-cars",
@@ -23,12 +24,17 @@ export class CarsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.us);
+    //console.log(this.us.get_mail());
+    // setTimeout(function() {
+    //   console.log(this.us);
+    // }, 3000);
+
     // get query params
     this.queryParams = this.route.snapshot.queryParams;
 
     this.get_cars();
     this.sio.connect().subscribe(m => {
+      console.log(m); //
       this.get_cars();
     });
   }

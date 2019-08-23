@@ -429,7 +429,7 @@ app.get("/renew", auth, (req, res, next) => {
     delete tokendata.exp;
     console.log("Renewing token for user " + JSON.stringify(tokendata));
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
-        expiresIn: "5m"
+        expiresIn: "10m"
     });
     return res
         .status(200)
@@ -444,8 +444,7 @@ passport.use(
         // Delegate function we provide to passport middleware
         // to verify user credentials
 
-        console.log("New login attept from ".green + username);
-
+        console.log("New login attempt from ".green + username);
         user.getModel().findOne({ mail: username }, (err, user) => {
             if (err) {
                 return done({

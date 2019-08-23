@@ -16,7 +16,11 @@
                 <a class="nav-link disabled" href="#">Disabled</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="">{{us}}</a>
+                <a class="nav-link" style="cursor: pointer;">{{us.get_mail()}}</a>
+
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" (click)="logout()" style="cursor: pointer;">Logout</a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">

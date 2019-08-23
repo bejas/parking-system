@@ -3,7 +3,7 @@ import mongoose = require("mongoose");
 // Car interface
 // A car has a licence plate and a timestamp_in
 export interface Car extends mongoose.Document {
-    plate: string[];
+    plate: string;
     timestamp_in: Date;
     timestamp_out: Date;
     timestamp_payment: Date;

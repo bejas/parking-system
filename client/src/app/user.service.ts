@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { Observable, of } from "rxjs";
-import { jwtdecode } from "jwt-decode";
+import * as jwtdecode from "jwt-decode";
 
 @Injectable({
   providedIn: "root"

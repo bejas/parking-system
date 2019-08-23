@@ -1,14 +1,14 @@
 // Car interface
 // A car has a licence plate and a timestamp
 export interface Car {
-  plate: string[];
+  plate: string;
   timestamp_in: Date;
-  timestamp_out: Date;
-  timestamp_payment: Date;
-  amountToPay: number;
+  // timestamp_out: Date;
+  // timestamp_payment: Date;
+  // amountToPay: number;
 
-  getAmountToPay: () => number;
-  makePayment: () => boolean;
+  // getAmountToPay: () => number;
+  // makePayment: () => boolean;
 }
 
 // JSON schema to check if the supplied parameter is compatible
