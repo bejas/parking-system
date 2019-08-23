@@ -23,6 +23,7 @@ export class CarsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(this.us);
     // get query params
     this.queryParams = this.route.snapshot.queryParams;
 
