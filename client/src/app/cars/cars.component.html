@@ -1,106 +1,110 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-        aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <a class="navbar-brand" href="/">Parking-System</a>
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cars?inside=true">Cars Inside</a>
-            </li>
+<div *ngIf="cars.length != 0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="/">Parking-System</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cars?inside=true">Cars Inside</a>
+                </li>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                    aria-haspopup="true" aria-expanded="false">Account</a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item text-muted disabled">{{us.get_username()}}</a>
-                    <a class="dropdown-item text-muted disabled">{{us.get_mail()}}</a>
-                    <div *ngIf="us.get_username() == 'admin'">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item text-muted disabled">{{us.get_username()}}</a>
+                        <a class="dropdown-item text-muted disabled">{{us.get_mail()}}</a>
+                        <div *ngIf="us.get_username() == 'admin'">
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/users">Users</a>
+                        </div>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/users">Users</a>
+                        <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a>
                     </div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a>
-                </div>
-            </li>
+                </li>
 
 
-            <li class="nav-item">
+                <li class="nav-item">
 
 
-            </li>
+                </li>
 
-        </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Plate Number" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                (click)="search(searchtxt.value)">Search</button>
-        </form>
-    </div>
-</nav>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+                <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Plate Number"
+                    aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
+                    (click)="search(searchtxt.value)">Search</button>
+            </form>
+        </div>
+    </nav>
 
 
 
-<div class="card text-center m-3">
-    <h3 class="card-header">TITLE</h3>
-    <div class="card-body">
-        <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 10px; width: 350px; ">
+    <div class="card text-center m-3">
+        <h3 class="card-header">TITLE</h3>
+        <div class="card-body">
+            <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 10px; width: 350px; ">
 
-            <div class="card-header">
-                <table style="width:100%">
-                    <tr>
-                        <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
-                        <td style="text-align: right;">
-                            <h5><b>{{car.plate}}</b></h5>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
+                <div class="card-header">
                     <table style="width:100%">
                         <tr>
-                            <td style="text-align: left"><i class="fas fa-donate"></i></td>
-                            <td style="text-align: right">
-                                <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
-                                </ng-container>
-                                <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
-                                <ng-template #alreadyPaid><i class="fas fa-check-circle" style="color: limegreen"></i>
-                                </ng-template>
+                            <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
+                            <td style="text-align: right;">
+                                <h5><b>{{car.plate}}</b></h5>
                             </td>
                         </tr>
                     </table>
-                </li>
-                <li class="list-group-item">
-                    <table style="width:100%">
-                        <tr>
-                            <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
-                            <td style="text-align: right">{{car.timestamp_in | date}} -
-                                {{car.timestamp_in | date:'shortTime'}}</td>
-                        </tr>
-                    </table>
-                </li>
-                <li class="list-group-item">
-                    <table style="width:100%">
-                        <tr>
-                            <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
-                            <td style="text-align: right">{{car.timestamp_out | date}} -
-                                {{car.timestamp_out | date:'shortTime'}}</td>
-                        </tr>
-                    </table>
-                </li>
-            </ul>
+                </div>
+
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="text-align: left"><i class="fas fa-donate"></i></td>
+                                <td style="text-align: right">
+                                    <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
+                                    </ng-container>
+                                    <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
+                                    <ng-template #alreadyPaid><i class="fas fa-check-circle"
+                                            style="color: limegreen"></i>
+                                    </ng-template>
+                                </td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li class="list-group-item">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
+                                <td style="text-align: right">{{car.timestamp_in | date}} -
+                                    {{car.timestamp_in | date:'shortTime'}}</td>
+                            </tr>
+                        </table>
+                    </li>
+                    <li class="list-group-item">
+                        <table style="width:100%">
+                            <tr>
+                                <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
+                                <td style="text-align: right">{{car.timestamp_out | date}} -
+                                    {{car.timestamp_out | date:'shortTime'}}</td>
+                            </tr>
+                        </table>
+                    </li>
+                </ul>
+
+            </div>
 
         </div>
-
-    </div>
-    <p>{{cars.length}} items</p>
-    <div class="card-footer pb-0 pt-3">
-        <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
+        <p>{{cars.length}} items</p>
+        <div class="card-footer pb-0 pt-3">
+            <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
+        </div>
     </div>
 </div>

@@ -75,6 +75,7 @@ export class UserHttpService {
   register(user): Observable<any> {
     const options = {
       headers: new HttpHeaders({
+        authorization: "Bearer " + this.get_token(),
         "cache-control": "no-cache",
         "Content-Type": "application/json"
       })
@@ -126,7 +127,7 @@ export class UserHttpService {
     return false;
   }
 
-  private create_options(params = {}) {
+  create_options(params = {}) {
     return {
       headers: new HttpHeaders({
         authorization: "Bearer " + this.get_token(),

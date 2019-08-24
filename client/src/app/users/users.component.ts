@@ -11,6 +11,8 @@ import { Router, ActivatedRoute } from "@angular/router";
 export class UsersComponent implements OnInit {
   private users = [];
   private modalIndex = 0;
+  private newUser = { mail: "", password: "", username: "", roles: [] };
+  private errmessage = undefined;
 
   constructor(
     private sio: SocketioService,
@@ -64,8 +66,24 @@ export class UsersComponent implements OnInit {
       console.log(data);
       setTimeout(() => {
         location.reload();
-      }, 500);
+      }, 100);
     });
+  }
+
+  add_user() {
+    this.us.register(this.newUser).subscribe(
+      d => {
+        console.log("Registration ok: " + JSON.stringify(d));
+        this.errmessage = undefined;
+        setTimeout(() => {
+          location.reload();
+        }, 100);
+      },
+      err => {
+        console.log("Signup error: " + JSON.stringify(err.error.errormessage));
+        this.errmessage = err.error.errormessage || err.error.message;
+      }
+    );
   }
 
   logout() {
