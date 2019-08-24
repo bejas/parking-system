@@ -71,4 +71,8 @@ export class UserService {
   get_users(): Observable<any> {
     return of({});
   }
+
+  delete_user(username: string): Observable<any> {
+    return of({});
+  }
 }

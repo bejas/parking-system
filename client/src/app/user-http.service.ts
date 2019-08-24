@@ -143,4 +143,10 @@ export class UserHttpService {
       .get<any[]>(this.url + "/users", this.create_options())
       .pipe(tap(data => console.log(JSON.stringify(data))));
   }
+
+  delete_user(username: string): Observable<any> {
+    return this.http
+      .delete<any>(this.url + "/users/" + username, this.create_options())
+      .pipe(tap(data => console.log(JSON.stringify(data))));
+  }
 }

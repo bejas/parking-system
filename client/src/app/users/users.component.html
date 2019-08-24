@@ -1,89 +1,127 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-        aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <a class="navbar-brand" href="/">Parking-System</a>
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item">
-                <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/cars?inside=true">Cars Inside</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
-            </li>
+<div *ngIf="users.length != 0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" style="margin-bottom: 10px">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="/">Parking-System</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/cars?inside=true">Cars Inside</a>
+                </li>
 
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
-                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="dropdown-item text-muted disabled">{{us.get_username()}}</a>
-                    <a class="dropdown-item text-muted disabled">{{us.get_mail()}}</a>
-                    <div *ngIf="us.get_username() == 'admin'">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Account</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item text-muted disabled">{{us.get_username()}}</a>
+                        <a class="dropdown-item text-muted disabled">{{us.get_mail()}}</a>
+                        <div *ngIf="us.get_username() == 'admin'">
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/users">Users</a>
+                        </div>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="/users">Users</a>
+                        <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a>
                     </div>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" (click)="logout()" style="cursor: pointer;">Logout</a>
+                </li>
+
+                <li class="nav-item">
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{users[modalIndex].username}}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Modal -->
+    <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Confirm delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Are you sure to delete {{users[modalIndex].username}}?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger"
+                        (click)="delete_user(users[modalIndex].username)">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div class="text-center">
+        <button type="button" class="btn btn-outline-success">New User</button>
+    </div>
+
+    <div *ngFor="let user of users" class="card mx-auto" style="margin: 10px; width: 350px; ">
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align: left">Username</td>
+                        <td style="text-align: right">{{user.username}}</td>
+                    </tr>
+                </table>
+            </li>
+            <li class="list-group-item">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align: left">Mail</td>
+                        <td style="text-align: right">{{user.mail}}</td>
+                    </tr>
+                </table>
+            </li>
+            <li class="list-group-item">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align: left">Roles</td>
+                        <td style="text-align: right">{{user.roles}}</td>
+                    </tr>
+                </table>
+            </li>
+            <li class="list-group-item text-center">
+                <div class="btn-group" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalEdit"
+                        (click)="setModalIndex(user.username)">Edit</button>
+                    <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modalDelete"
+                        (click)="setModalIndex(user.username)">Delete</button>
                 </div>
             </li>
-
-
-            <li class="nav-item">
-
-
-            </li>
-
         </ul>
-        <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Plate Number" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
-                (click)="search(searchtxt.value)">Search</button>
-        </form>
+
     </div>
-</nav>
-
-
-
-
-
-<div *ngFor="let user of users" class="card mx-auto" style="margin: 10px; width: 350px; ">
-    <ul class="list-group list-group-flush">
-        <li class="list-group-item">
-            <table style="width:100%">
-                <tr>
-                    <td style="text-align: left">Username</td>
-                    <td style="text-align: right">{{user.username}}</td>
-                </tr>
-            </table>
-        </li>
-        <li class="list-group-item">
-            <table style="width:100%">
-                <tr>
-                    <td style="text-align: left">Mail</td>
-                    <td style="text-align: right">{{user.mail}}</td>
-                </tr>
-            </table>
-        </li>
-        <li class="list-group-item">
-            <table style="width:100%">
-                <tr>
-                    <td style="text-align: left">Roles</td>
-                    <td style="text-align: right">{{user.roles}}</td>
-                </tr>
-            </table>
-        </li>
-        <li class="list-group-item">
-            <table style="width:100%">
-                <tr>
-                    <td style="text-align: center">EDIT</td>
-                </tr>
-            </table>
-        </li>
-    </ul>
-
 </div>

@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class UsersComponent implements OnInit {
   private users = [];
+  private modalIndex = 0;
 
   constructor(
     private sio: SocketioService,
@@ -26,7 +27,18 @@ export class UsersComponent implements OnInit {
     });
   }
 
+  public setModalIndex(username) {
+    for (var i = 0; i < this.users.length; i++) {
+      if (this.users[i].username == username) {
+        this.modalIndex = i;
+      }
+    }
+  }
+
   public get_users() {
+    // setInterval(() => {
+    //   console.log(this.modalEditIndex);
+    // }, 1000);
     this.us.get_users().subscribe(
       users => {
         this.users = users;
@@ -45,6 +57,15 @@ export class UsersComponent implements OnInit {
         );
       }
     );
+  }
+
+  public delete_user(username) {
+    this.us.delete_user(username).subscribe(data => {
+      console.log(data);
+      setTimeout(() => {
+        location.reload();
+      }, 500);
+    });
   }
 
   logout() {
