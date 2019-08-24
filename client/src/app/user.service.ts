@@ -67,4 +67,8 @@ export class UserService {
     }
     return false;
   }
+
+  get_users(): Observable<any> {
+    return of({});
+  }
 }

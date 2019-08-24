@@ -14,7 +14,6 @@ import { Router, ActivatedRoute } from "@angular/router";
 export class CarsComponent implements OnInit {
   private cars: Car[] = [];
   public queryParams;
-
   pageOfItems: Array<Car>;
 
   constructor(

@@ -125,4 +125,22 @@ export class UserHttpService {
     }
     return false;
   }
+
+  private create_options(params = {}) {
+    return {
+      headers: new HttpHeaders({
+        authorization: "Bearer " + this.get_token(),
+        "cache-control": "no-cache",
+        "Content-Type": "application/json"
+      }),
+      params: new HttpParams({ fromObject: params })
+    };
+  }
+  //{ limit: "10", skip: "0" }
+
+  get_users(): Observable<any> {
+    return this.http
+      .get<any[]>(this.url + "/users", this.create_options())
+      .pipe(tap(data => console.log(JSON.stringify(data))));
+  }
 }

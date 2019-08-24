@@ -19,6 +19,7 @@ import { SocketioService } from "./socketio.service";
 import { PaymentInfoComponent } from "./payment-info/payment-info.component";
 import { CarHttpService } from "./car-http.service";
 import { JwPaginationComponent } from "jw-angular-pagination";
+import { UsersComponent } from './users/users.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { JwPaginationComponent } from "jw-angular-pagination";
     AdminPanelComponent,
     CarsComponent,
     PaymentInfoComponent,
-    JwPaginationComponent
+    JwPaginationComponent,
+    UsersComponent
   ],
   imports: [BrowserModule, FormsModule, HttpClientModule, AppRoutingModule],
   providers: [
