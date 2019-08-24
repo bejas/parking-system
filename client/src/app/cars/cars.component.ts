@@ -23,7 +23,11 @@ export class CarsComponent implements OnInit {
     private us: UserService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+      return false;
+    };
+  }
 
   onChangePage(pageOfItems: Array<Car>) {
     // update current page of items
@@ -70,7 +74,13 @@ export class CarsComponent implements OnInit {
   }
 
   search(plate) {
-    this.router.navigate(["/cars"], { queryParams: { plate: plate } });
+    if (this.route.snapshot.queryParams.inside == "true") {
+      this.router.navigate(["/cars"], {
+        queryParams: { plate: plate, inside: true }
+      });
+    } else {
+      this.router.navigate(["/cars"], { queryParams: { plate: plate } });
+    }
   }
 
   logout() {
