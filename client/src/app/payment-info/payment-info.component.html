@@ -14,7 +14,7 @@
 
             <!-- There is an amount to pay -->
             <div *ngIf="car.amountToPay != 0">
-                <i class="far fa-credit-card paymentlogo"></i> <br><br>
+                <i class="fas fa-car carlogo"></i><br><br>
                 <h1 class="h1 mb-3 font-weight-normal">{{car.plate}}</h1>
 
                 <h1 class="h3 mb-3 font-weight-normal">
@@ -23,8 +23,9 @@
 
 
 
-                <div class="card-body p-5 border">
+                <div class="card-body p-4 border">
                     <form>
+                        <i class="far fa-credit-card cardlogo"></i> <br><br>
                         <div class="form-row ">
                             <div class="col">
                                 <label for="inputNameOnCard" class="text-left">Name on Card</label>
@@ -61,7 +62,13 @@
 
                 <br> <button (click)="makePayment()" type="button" class="btn btn-primary">Confirm Payment</button>
 
+                <br><br>
+                <p><a routerLink="/payment">Back</a></p>
+
             </div>
+
+
+
 
 
             <p class="mt-5 mb-3 text-muted">&copy; 2019-2020</p>

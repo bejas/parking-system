@@ -71,7 +71,7 @@ carSchema.methods.getAmountToPay = function() {
         // payment has not made
         var difference = this.timestamp_in.getTime() - new Date().getTime();
         var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
-        return differenceMinutes * unitPrice;
+        return (differenceMinutes * unitPrice).toFixed(2);
     } else {
         // payment has made
         var difference =
@@ -80,7 +80,7 @@ carSchema.methods.getAmountToPay = function() {
 
         if (differenceMinutes > minutesToExit) {
             // 10 minutes elapsed
-            return (differenceMinutes - minutesToExit) * unitPrice;
+            return ((differenceMinutes - minutesToExit) * unitPrice).toFixed(2);
         } else {
             // 10 minutes not elapsed
             return 0;

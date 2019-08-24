@@ -4,7 +4,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-        <a class="navbar-brand" href="/cars">Parking-System</a>
+        <a class="navbar-brand" href="/">Parking-System</a>
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <li class="nav-item active">
                 <a class="nav-link" href="/cars">Home<span class="sr-only">(current)</span></a>
@@ -24,7 +24,7 @@
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2" type="search" #searchtxt placeholder="Plate Number" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit"
                 (click)="search(searchtxt.value)">Search</button>
         </form>
@@ -37,11 +37,62 @@
     <h3 class="card-header">TITLE</h3>
     <div class="card-body">
         <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 5px; width: 350px; ">
-            <div class="card-body text-center">
+
+
+
+            <!-- <p style="display:inline">@</p> -->
+            <div class="card-header">
+                <table style="width:100%">
+                    <tr>
+                        <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
+                        <td style="text-align: right;">
+                            <h5><b>{{car.plate}}</b></h5>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align: left"><i class="fas fa-euro-sign"></i></td>
+                            <td style="text-align: right">
+                                <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
+                                </ng-container>
+                                <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
+                                <ng-template #alreadyPaid><i class="fas fa-check-circle" style="color: limegreen"></i>
+                                </ng-template>
+                            </td>
+                        </tr>
+                    </table>
+                </li>
+                <li class="list-group-item">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
+                            <td style="text-align: right">{{car.timestamp_in | date}} -
+                                {{car.timestamp_in | date:'shortTime'}}</td>
+                        </tr>
+                    </table>
+                </li>
+                <li class="list-group-item">
+                    <table style="width:100%">
+                        <tr>
+                            <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
+                            <td style="text-align: right">{{car.timestamp_out | date}} -
+                                {{car.timestamp_out | date:'shortTime'}}</td>
+                        </tr>
+                    </table>
+                </li>
+            </ul>
+
+
+            <!-- <div class="card-body text-center">
                 <h2 class="card-title text-center">{{car.plate}}</h2>
                 <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid"></ng-container>
                 <ng-template #stillNotPaid>
-                    <h5 class="card-subtitle mb-2">€ {{car.amountToPay.toFixed(2)}}</h5>
+                    <h5 class="card-subtitle mb-2">€ {{car.amountToPay}}</h5>
                 </ng-template>
                 <ng-template #alreadyPaid>
                     <h5 class="card-subtitle mb-2"><i class="fas fa-check-circle" style="color: limegreen"></i></h5>
@@ -53,7 +104,7 @@
                 <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-sign-out-alt"></i>
                     {{car.timestamp_out | date}} -
                     {{car.timestamp_out | date:'shortTime'}}</h6>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="card-footer pb-0 pt-3">
