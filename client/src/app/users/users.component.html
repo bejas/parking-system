@@ -42,24 +42,13 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add new user</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add new User</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <form class="form-signin">
-
-                        <div class="form-group">
-                            <label for="inputEmail">Email address</label>
-                            <input type="email" #mail="ngModel" name="mail" [(ngModel)]="newUser.mail"
-                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control" required id="inputEmail"
-                                aria-describedby="emailHelp" placeholder="Enter email">
-                        </div>
-
-                        <div [hidden]="mail.valid || mail.pristine" class="alert alert-danger">
-                            Mail is not valid
-                        </div>
 
                         <div class="form-group">
                             <label for="inputUsername">Username</label>
@@ -73,6 +62,17 @@
                         </div>
 
                         <div class="form-group">
+                            <label for="inputEmail">Email address</label>
+                            <input type="email" #mail="ngModel" name="mail" [(ngModel)]="newUser.mail"
+                                pattern="[^@\s]+@[^@\s]+\.[^@\s]+" class="form-control" required id="inputEmail"
+                                aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+
+                        <div [hidden]="mail.valid || mail.pristine" class="alert alert-danger">
+                            Mail is not valid
+                        </div>
+
+                        <div class="form-group">
                             <label for="inputPassword">Password</label>
                             <input type="password" #password="ngModel" required name="password"
                                 [(ngModel)]="newUser.password" class="form-control" id="inputPassword"
@@ -83,6 +83,18 @@
                             Password is required
                         </div>
 
+                        <p style="margin-bottom: 5px">Roles</p>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="adminCheck" #checkA>
+                            <label class="form-check-label" for="adminCheck">Admin</label>
+                        </div>
+
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="moderatorCheck" #checkM>
+                            <label class="form-check-label" for="moderatorCheck">Moderator</label>
+                        </div>
+
                         <div *ngIf="errmessage" class="alert alert-danger" role="alert">
                             Login error: {{errmessage}}
                         </div>
@@ -91,9 +103,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary"
-                        [disabled]=" !mail.valid || !password.valid || !username.valid" (click)="add_user();">Sign
-                        up</button>
+                    <button type="button" class="btn btn-success"
+                        [disabled]=" !mail.valid || !password.valid || !username.valid"
+                        (click)="add_user({ admin:checkA.checked, moderator: checkM.checked });">Add
+                        User</button>
                 </div>
             </div>
         </div>

@@ -70,7 +70,15 @@ export class UsersComponent implements OnInit {
     });
   }
 
-  add_user() {
+  add_user(checkboxes: { admin: boolean; moderator: boolean }) {
+    // Add roles.
+    if (checkboxes.admin) {
+      this.newUser.roles.push("ADMIN");
+    }
+    if (checkboxes.moderator) {
+      this.newUser.roles.push("MODERATOR");
+    }
+
     this.us.register(this.newUser).subscribe(
       d => {
         console.log("Registration ok: " + JSON.stringify(d));
