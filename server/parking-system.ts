@@ -11,7 +11,7 @@
  *                  ?inside=true
  *   /cars            -                 POST            Inserts a new car in the parking garage
  *   /cars/:plate     -                 PATCH           Remove a car from the parking garage
- *   /cars/:plate     -                 DELETE          Delete a car from all history
+ *   /cars/:id     -                    DELETE          Delete a car from all history by id
  *
  *   /payment/:plate  -                 GET             Get payment information about a specified car.
  *   /payment/:plate  -                 POST            Send payment for the specified car.
@@ -20,9 +20,10 @@
  *   /users/:username -                 GET             Get user info by username
  *   /users           -                 POST            Add a new user
  *   /users/:username -                 DELETE          Delete a user
- *   /users/:username -                 PUT             Update user info
  *
  *   /login           -                 POST            Login an existing user, returning a JWT
+ *
+ *   /renew           -                 GET             Renew JWT
  *
  **/
 //
@@ -101,7 +102,7 @@ app.route("/cars")
     .get(auth, (req, res, next) => {
         var filter = {};
         if (req.query.plate) {
-            filter = { plate: req.query.plate };
+            filter["plate"] = req.query.plate;
         }
         if (req.query.inside == "true") {
             filter["timestamp_out"] = "";
@@ -131,23 +132,22 @@ app.route("/cars")
             });
     })
     .post(auth, (req, res, next) => {
-        console.log("Inserted: " + JSON.stringify(req.body));
+        console.log("Trying to insert: " + JSON.stringify(req.body));
 
         var insertedCar = req.body;
         insertedCar.timestamp_in = new Date();
 
         if (car.isCar(insertedCar)) {
-            // Check if car is already inside parking lot.
+            // Check if car is already inside the parking lot.
             car.getModel()
                 .find({ plate: insertedCar.plate })
                 .sort({ timestamp_in: -1 })
                 .limit(1)
                 .then(objFound => {
-                    console.log(objFound);
                     var firstCar = objFound.shift();
                     if (firstCar && !firstCar.timestamp_out) {
                         return next({
-                            statusCode: 404,
+                            statusCode: 409,
                             error: true,
                             errorMessage: "Car already inside the parking lot."
                         });
@@ -155,6 +155,9 @@ app.route("/cars")
                         car.getModel()
                             .create(insertedCar)
                             .then(data => {
+                                console.log(
+                                    "Inserted: " + JSON.stringify(req.body)
+                                );
                                 return res.status(200).json({
                                     error: false,
                                     errorMessage: "",
@@ -179,121 +182,20 @@ app.route("/cars")
                 });
         } else {
             return next({
-                statusCode: 404,
+                statusCode: 400,
                 error: true,
-                errorMessage: "Data is not a valid Car"
+                errorMessage: "Data provided is not a valid Car."
             });
         }
     });
-//
-
-app.get("/payment/:plate", (req, res) => {
-    if (!req.params.plate) {
-        res.status(404).json({
-            statusCode: 404,
-            error: true,
-            errorMessage: "Insert a valid licence plate number"
-        });
-    } else {
-        console.log(
-            "GET Payment for plate: " + JSON.stringify(req.params.plate)
-        );
-        car.getModel()
-            .find({ plate: req.params.plate })
-            .sort({ timestamp_in: -1 })
-            .limit(1)
-            .then(objFound => {
-                var firstCar = objFound.shift();
-                console.log("Found: " + JSON.stringify(firstCar));
-                firstCar.amountToPay = firstCar.getAmountToPay();
-                console.log("With Payment info: " + JSON.stringify(firstCar));
-                return res.status(200).json(firstCar);
-            })
-            .catch(reason => {
-                res.status(404).json({
-                    statusCode: 404,
-                    error: true,
-                    errorMessage: "DB error: " + reason
-                });
-            });
-    }
-});
-
-app.post("/payment/:plate", (req, res) => {
-    if (!req.params.plate) {
-        res.status(404).json({
-            statusCode: 404,
-            error: true,
-            errorMessage: "Insert a valid licence plate number"
-        });
-    } else {
-        console.log(
-            "POST Payment for plate: " + JSON.stringify(req.params.plate)
-        );
-
-        car.getModel()
-            .find({ plate: req.params.plate })
-            .sort({ timestamp_in: -1 })
-            .limit(1)
-            .then(objFound => {
-                var firstCar = objFound.shift();
-
-                var result = firstCar.makePayment();
-
-                if (result) {
-                    firstCar.save();
-                    res.status(200).json({
-                        error: false,
-                        errorMessage: ""
-                    });
-                } else {
-                    res.status(404).json({
-                        error: true,
-                        errorMessage: "Payment already done."
-                    });
-                }
-            })
-            .catch(reason => {
-                res.status(404).json({
-                    statusCode: 404,
-                    error: true,
-                    errorMessage: "DB error: " + reason
-                });
-            });
-    }
-});
-
-app.delete("/cars/:plate", auth, (req, res, next) => {
-    // Check moderator role
-    if (!user.newUser(req.user).hasModeratorRole()) {
-        return next({
-            statusCode: 404,
-            error: true,
-            errorMessage: "Unauthorized: user is not a Moderator."
-        });
-    }
-
-    car.getModel()
-        .deleteOne({ plate: req.params.plate })
-        .then(() => {
-            return res.status(200).json({ error: false, errorMessage: "" });
-        })
-        .catch(reason => {
-            return next({
-                statusCode: 404,
-                error: true,
-                errorMessage: "DB error: " + reason
-            });
-        });
-});
 
 app.patch("/cars/:plate", auth, (req, res, next) => {
     // Check moderator role
     if (!user.newUser(req.user).hasModeratorRole()) {
         return next({
-            statusCode: 404,
+            statusCode: 401,
             error: true,
-            errorMessage: "Unauthorized: user is not a Moderator."
+            errorMessage: "Unauthorized: User is not a Moderator."
         });
     }
 
@@ -314,11 +216,92 @@ app.patch("/cars/:plate", auth, (req, res, next) => {
             } else {
                 res.status(402).json({
                     error: true,
-                    errorMessage: "Payment required before exiting."
+                    errorMessage: "Payment is required before exiting."
                 });
             }
+        })
+        .catch(reason => {
+            res.status(404).json({
+                statusCode: 404,
+                error: true,
+                errorMessage: "DB error: " + reason
+            });
+        });
+});
 
+app.delete("/cars/:id", auth, (req, res, next) => {
+    // Check moderator role
+    if (!user.newUser(req.user).hasModeratorRole()) {
+        return next({
+            statusCode: 401,
+            error: true,
+            errorMessage: "Unauthorized: User is not a Moderator."
+        });
+    }
+
+    car.getModel()
+        .deleteOne({ _id: req.params.id })
+        .then(() => {
+            return res.status(200).json({ error: false, errorMessage: "" });
+        })
+        .catch(reason => {
+            return next({
+                statusCode: 404,
+                error: true,
+                errorMessage: "DB error: " + reason
+            });
+        });
+});
+//
+
+app.get("/payment/:plate", (req, res, next) => {
+    console.log(
+        "GET Payment for plate number: " + JSON.stringify(req.params.plate)
+    );
+    car.getModel()
+        .find({ plate: req.params.plate })
+        .sort({ timestamp_in: -1 })
+        .limit(1)
+        .then(objFound => {
+            var firstCar = objFound.shift();
+            firstCar.amountToPay = firstCar.getAmountToPay();
+            console.log("Found: " + JSON.stringify(firstCar));
             return res.status(200).json(firstCar);
+        })
+        .catch(reason => {
+            return next({
+                statusCode: 404,
+                error: true,
+                errorMessage: "DB error: " + reason
+            });
+        });
+});
+
+app.post("/payment/:plate", (req, res, next) => {
+    console.log(
+        "POST Payment for plate number: " + JSON.stringify(req.params.plate)
+    );
+    car.getModel()
+        .find({ plate: req.params.plate })
+        .sort({ timestamp_in: -1 })
+        .limit(1)
+        .then(objFound => {
+            var firstCar = objFound.shift();
+            var result = firstCar.makePayment();
+
+            if (result) {
+                firstCar.save();
+                return res.status(200).json({
+                    error: false,
+                    errorMessage: ""
+                });
+            } else {
+                return next({
+                    statusCode: 409,
+                    error: true,
+                    errorMessage: "Payment already done."
+                });
+            }
         })
         .catch(reason => {
             res.status(404).json({
@@ -344,42 +327,7 @@ app.get("/users", auth, (req, res, next) => {
         });
 });
 
-app.put("/users/:username", auth, (req, res, next) => {
-    // Check admin role
-    if (!user.newUser(req.user).hasAdminRole()) {
-        return next({
-            statusCode: 401,
-            error: true,
-            errorMessage: "Unauthorized: User is not an Admininstrator."
-        });
-    }
-
-    //var u = user.newUser(req.body);
-
-    user.getModel()
-        .findOne({ username: req.params.username })
-        .then(user => {
-            user.roles = req.body.roles;
-            user.setPassword(req.body.password);
-            user.mail = req.body.mail;
-            user.save();
-            return next({
-                statusCode: 200,
-                error: false,
-                errorMessage: ""
-            });
-        })
-        .catch(reason => {
-            return next({
-                statusCode: 404,
-                error: true,
-                errorMessage: "DB error: " + reason
-            });
-        });
-});
-
 app.get("/users/:username", auth, (req, res, next) => {
-    // req.params.username contains the :username URL component
     user.getModel()
         .findOne({ username: req.params.username }, { digest: 0, salt: 0 })
         .then(user => {
@@ -407,7 +355,7 @@ app.post("/users", auth, (req, res, next) => {
     var u = user.newUser(req.body);
     if (!req.body.password) {
         return next({
-            statusCode: 404,
+            statusCode: 400,
             error: true,
             errorMessage: "Password field is missing."
         });
@@ -416,9 +364,11 @@ app.post("/users", auth, (req, res, next) => {
 
     u.save()
         .then(data => {
-            return res
-                .status(200)
-                .json({ error: false, errorMessage: "", id: data._id });
+            return res.status(200).json({
+                error: false,
+                errorMessage: "",
+                id: data._id
+            });
         })
         .catch(reason => {
             return next({
@@ -433,7 +383,7 @@ app.delete("/users/:username", auth, (req, res, next) => {
     // Check admin role
     if (!user.newUser(req.user).hasAdminRole()) {
         return next({
-            statusCode: 404,
+            statusCode: 401,
             error: true,
             errorMessage: "Unauthorized: User is not an Admininstrator."
         });
@@ -442,7 +392,7 @@ app.delete("/users/:username", auth, (req, res, next) => {
     // Prevent deleting admin user
     if (req.params.username == "admin") {
         return next({
-            statusCode: 500,
+            statusCode: 403,
             error: true,
             errorMessage: "Admin user cannot be deleted."
         });
@@ -451,7 +401,10 @@ app.delete("/users/:username", auth, (req, res, next) => {
     user.getModel()
         .deleteOne({ username: req.params.username })
         .then(() => {
-            return res.status(200).json({ error: false, errorMessage: "" });
+            return res.status(200).json({
+                error: false,
+                errorMessage: ""
+            });
         })
         .catch(reason => {
             return next({
@@ -470,9 +423,11 @@ app.get("/renew", auth, (req, res, next) => {
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
         expiresIn: "10m"
     });
-    return res
-        .status(200)
-        .json({ error: false, errorMessage: "", token: token_signed });
+    return res.status(200).json({
+        error: false,
+        errorMessage: "",
+        token: token_signed
+    });
 });
 
 // Configure HTTP basic authentication strategy
@@ -537,9 +492,11 @@ app.get(
             { expiresIn: "5m" }
         );
 
-        return res
-            .status(200)
-            .json({ error: false, errorMessage: "", token: token_signed });
+        return res.status(200).json({
+            error: false,
+            errorMessage: "",
+            token: token_signed
+        });
     }
 );
 
@@ -582,6 +539,8 @@ mongoose.connect("mongodb://localhost:27017/parking-system").then(
                         });
                 }
             });
+
+        // Add mock car
         car.getModel()
             .count({})
             .then(count => {
@@ -591,7 +550,7 @@ mongoose.connect("mongodb://localhost:27017/parking-system").then(
                     car.getModel()
                         .create(c)
                         .then(data => {
-                            console.log("Inserted Car with plate nr: ABC1234");
+                            console.log("Inserted Car: " + c);
                         });
                 }
             });
