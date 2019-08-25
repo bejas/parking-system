@@ -20,7 +20,7 @@
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item text-muted disabled">{{us.get_username()}}</a>
                         <a class="dropdown-item text-muted disabled">{{us.get_mail()}}</a>
-                        <div *ngIf="us.get_username() == 'admin'">
+                        <div *ngIf="us.is_admin()">
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="/users">Users</a>
                         </div>

@@ -20,6 +20,7 @@
  *   /users/:username -                 GET             Get user info by username
  *   /users           -                 POST            Add a new user
  *   /users/:username -                 DELETE          Delete a user
+ *   /users/:username -                 PUT             Update user info
  *
  *   /login           -                 POST            Login an existing user, returning a JWT
  *
@@ -311,9 +312,9 @@ app.patch("/cars/:plate", auth, (req, res, next) => {
                     errorMessage: ""
                 });
             } else {
-                res.status(404).json({
+                res.status(402).json({
                     error: true,
-                    errorMessage: "Payment haven't made yet."
+                    errorMessage: "Payment required before exiting."
                 });
             }
 
@@ -333,6 +334,40 @@ app.get("/users", auth, (req, res, next) => {
         .find({}, { digest: 0, salt: 0 })
         .then(users => {
             return res.status(200).json(users);
+        })
+        .catch(reason => {
+            return next({
+                statusCode: 404,
+                error: true,
+                errorMessage: "DB error: " + reason
+            });
+        });
+});
+
+app.put("/users/:username", auth, (req, res, next) => {
+    // Check admin role
+    if (!user.newUser(req.user).hasAdminRole()) {
+        return next({
+            statusCode: 401,
+            error: true,
+            errorMessage: "Unauthorized: User is not an Admininstrator."
+        });
+    }
+
+    //var u = user.newUser(req.body);
+
+    user.getModel()
+        .findOne({ username: req.params.username })
+        .then(user => {
+            user.roles = req.body.roles;
+            user.setPassword(req.body.password);
+            user.mail = req.body.mail;
+            user.save();
+            return next({
+                statusCode: 200,
+                error: false,
+                errorMessage: ""
+            });
         })
         .catch(reason => {
             return next({
@@ -363,7 +398,7 @@ app.post("/users", auth, (req, res, next) => {
     // Check admin role
     if (!user.newUser(req.user).hasAdminRole()) {
         return next({
-            statusCode: 404,
+            statusCode: 401,
             error: true,
             errorMessage: "Unauthorized: User is not an Admininstrator."
         });

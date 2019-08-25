@@ -8,10 +8,11 @@
         <p><i># Try with ABC1234</i></p>
 
         <label for="inputPlate" class="sr-only">Plate number</label>
-        <input type="text" #platetxt id="inputPlate" class="form-control" placeholder="Plate Number" required autofocus>
+        <input type="text" (keydown.enter)="getCar(platetxt.value)" #platetxt id="inputPlate" class="form-control"
+            placeholder="Plate Number" required autofocus>
 
 
-        <button class="btn btn-lg btn-primary btn-block" (click)="getCar(platetxt.value);">
+        <button class="btn btn-lg btn-primary btn-block" (click)="getCar(platetxt.value)">
             Submit
         </button>
 

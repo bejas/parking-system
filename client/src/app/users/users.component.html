@@ -112,27 +112,6 @@
         </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div class="modal fade" id="modalEdit" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add new user</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    {{users[modalIndex].username}}
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Delete Modal -->
     <div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
@@ -192,10 +171,8 @@
             </li>
             <li class="list-group-item text-center">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modalEdit"
-                        (click)="setModalIndex(user.username)">Edit</button>
                     <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#modalDelete"
-                        (click)="setModalIndex(user.username)">Delete</button>
+                        (click)="setModalIndex(user.username)" [disabled]="user.username == 'admin'">Delete</button>
                 </div>
             </li>
         </ul>
