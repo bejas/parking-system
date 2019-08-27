@@ -9,7 +9,7 @@ export class UserService {
   constructor() {}
 
   private token = "";
-  public url = "";
+  public url: string = "";
 
   login(mail: string, password: string, remember: boolean): Observable<any> {
     console.log("Login: " + mail + " " + password);

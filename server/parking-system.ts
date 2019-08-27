@@ -92,6 +92,7 @@ app.use(bodyparser.json());
 
 // Add API routes to express application
 app.get("/", (req, res) => {
+    // ios.emit("broadcast", "get root");
     res.status(200).json({
         api_version: "1.0",
         endpoints: ["/cars", "/users", "/login", "/payment"]
@@ -158,6 +159,12 @@ app.route("/cars")
                                 console.log(
                                     "Inserted: " + JSON.stringify(req.body)
                                 );
+                                ios.emit("broadcast", {
+                                    message:
+                                        insertedCar.plate +
+                                        " Entered the parking.",
+                                    status: "notice"
+                                });
                                 return res.status(200).json({
                                     error: false,
                                     errorMessage: "",
@@ -209,11 +216,19 @@ app.patch("/cars/:plate", auth, (req, res, next) => {
             if (firstCar.getAmountToPay() == 0) {
                 firstCar.timestamp_out = new Date();
                 firstCar.save();
+                ios.emit("broadcast", {
+                    message: firstCar.plate + " Is exiting now.",
+                    status: "notice"
+                });
                 res.status(200).json({
                     error: false,
                     errorMessage: ""
                 });
             } else {
+                ios.emit("broadcast", {
+                    message: firstCar.plate + " Tried to exit without paying.",
+                    status: "error"
+                });
                 res.status(402).json({
                     error: true,
                     errorMessage: "Payment is required before exiting."
@@ -291,6 +306,10 @@ app.post("/payment/:plate", (req, res, next) => {
 
             if (result) {
                 firstCar.save();
+                ios.emit("broadcast", {
+                    message: firstCar.plate + " Completed payment.",
+                    status: "normal"
+                });
                 return res.status(200).json({
                     error: false,
                     errorMessage: ""
@@ -568,8 +587,18 @@ mongoose.connect("mongodb://localhost:27017/parking-system").then(
         let server = http.createServer(app);
         ios = io(server);
         ios.on("connection", function(client) {
-            console.log("Socket.io client connected".green);
+            console.log("Socket.io client connected.".green);
+
+            client.on("disconnect", function() {
+                console.log("Socket.io client disconnected.".yellow);
+            });
+            // client.on("getCar", function(m) {
+            //     console.log("SOCKET SERVER GETCAR");
+            //     console.log(m);
+            //     ios.emit("broadcast", "message from server");
+            // });
         });
+
         server.listen(8080, () =>
             console.log("HTTP Server started on port 8080")
         );

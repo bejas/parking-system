@@ -70,6 +70,10 @@ export class CarHttpService {
   get_cars(params = {}): Observable<Car[]> {
     return this.http
       .get<Car[]>(this.us.url + "/cars", this.create_options(params))
-      .pipe(tap(data => console.log(JSON.stringify(data))));
+      .pipe(
+        tap(data => {
+          console.log(JSON.stringify(data));
+        })
+      );
   }
 }

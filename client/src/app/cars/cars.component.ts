@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, EventEmitter, Output } from "@angular/core";
 import { SocketioService } from "../socketio.service";
 import { UserService } from "../user.service";
 import { CarHttpService } from "../car-http.service";
@@ -13,8 +13,9 @@ import { Router, ActivatedRoute } from "@angular/router";
 })
 export class CarsComponent implements OnInit {
   private cars: Car[] = [];
+  private events: string[] = [];
   public queryParams;
-  pageOfItems: Array<Car>;
+  private pageOfItems: Array<Car> = [];
 
   constructor(
     private sio: SocketioService,
@@ -28,28 +29,38 @@ export class CarsComponent implements OnInit {
     };
   }
 
+  // @Output() posted = new EventEmitter();
+
+  // emit_event() {
+  //   console.log("Button clicked.");
+  //   this.sio.socket.emit("getCar", "hello get car");
+  // }
+
   onChangePage(pageOfItems: Array<Car>) {
     // update current page of items
+    console.log(pageOfItems);
     this.pageOfItems = pageOfItems;
   }
 
   ngOnInit() {
-    //console.log(this.us.get_mail());
-    // setTimeout(function() {
-    //   console.log(this.us);
-    // }, 3000);
-
     // get query params
     this.queryParams = this.route.snapshot.queryParams;
 
     this.get_cars();
+    // setInterval(() => {
+    //   this.get_cars();
+    // }, 1000);
+
     this.sio.connect().subscribe(m => {
-      console.log(m); //
+      //console.log(m); //
+      this.events.push(m);
       this.get_cars();
     });
   }
 
   //{ limit: "10", skip: "0" }
+
+  private socket_handler(m) {}
 
   public get_cars() {
     this.cs.get_cars(this.queryParams).subscribe(

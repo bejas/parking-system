@@ -45,66 +45,122 @@
         </div>
     </nav>
 
+    <!-- <div class="card text-center m-3">
+                <h3 class="card-header">TITLE</h3>
+                <div class="card-body">
+                    <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 10px; width: 350px; ">
 
+                        <div class="card-header">
+                            <table style="width:100%">
+                                <tr>
+                                    <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
+                                    <td style="text-align: right;">
+                                        <h5><b>{{car.plate}}</b></h5>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
 
-    <div class="card text-center m-3">
-        <h3 class="card-header">TITLE</h3>
-        <div class="card-body">
-            <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 10px; width: 350px; ">
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="text-align: left"><i class="fas fa-donate"></i></td>
+                                        <td style="text-align: right">
+                                            <ng-container
+                                                *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
+                                            </ng-container>
+                                            <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
+                                            <ng-template #alreadyPaid><i class="fas fa-check-circle"
+                                                    style="color: limegreen"></i>
+                                            </ng-template>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li class="list-group-item">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
+                                        <td style="text-align: right">{{car.timestamp_in | date}} -
+                                            {{car.timestamp_in | date:'shortTime'}}</td>
+                                    </tr>
+                                </table>
+                            </li>
+                            <li class="list-group-item">
+                                <table style="width:100%">
+                                    <tr>
+                                        <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
+                                        <td style="text-align: right">{{car.timestamp_out | date}} -
+                                            {{car.timestamp_out | date:'shortTime'}}</td>
+                                    </tr>
+                                </table>
+                            </li>
+                        </ul>
 
-                <div class="card-header">
-                    <table style="width:100%">
-                        <tr>
-                            <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
-                            <td style="text-align: right;">
-                                <h5><b>{{car.plate}}</b></h5>
-                            </td>
-                        </tr>
-                    </table>
+                    </div>
+
                 </div>
+                <p>{{cars.length}} items</p>
+                <div class="card-footer pb-0 pt-3">
+                    <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
+                </div> -->
 
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
-                        <table style="width:100%">
-                            <tr>
-                                <td style="text-align: left"><i class="fas fa-donate"></i></td>
-                                <td style="text-align: right">
-                                    <ng-container *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
-                                    </ng-container>
-                                    <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
-                                    <ng-template #alreadyPaid><i class="fas fa-check-circle"
-                                            style="color: limegreen"></i>
-                                    </ng-template>
-                                </td>
-                            </tr>
-                        </table>
-                    </li>
-                    <li class="list-group-item">
-                        <table style="width:100%">
-                            <tr>
-                                <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
-                                <td style="text-align: right">{{car.timestamp_in | date}} -
-                                    {{car.timestamp_in | date:'shortTime'}}</td>
-                            </tr>
-                        </table>
-                    </li>
-                    <li class="list-group-item">
-                        <table style="width:100%">
-                            <tr>
-                                <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
-                                <td style="text-align: right">{{car.timestamp_out | date}} -
-                                    {{car.timestamp_out | date:'shortTime'}}</td>
-                            </tr>
-                        </table>
-                    </li>
-                </ul>
 
-            </div>
+
+    <div class="modal-body row">
+        <div class="col-md-8">
+            <!-- Your first column here -->
+            <h4 class="text-center">Car list</h4>
+
+            <table class="table table-sm table-striped table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th scope="col">Plate Number</th>
+                        <th scope="col">Parking IN</th>
+                        <th scope="col">Parking OUT</th>
+                        <th scope="col">Amount to Pay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let car of pageOfItems">
+                        <td>{{car.plate}}</td>
+                        <td>{{car.timestamp_in | date}} - {{car.timestamp_in | date:'shortTime'}}</td>
+                        <td>{{car.timestamp_out | date}} - {{car.timestamp_out | date:'shortTime'}}</td>
+                        <td>{{car.amountToPay}}</td>
+
+
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="text-center">{{pageOfItems.length}} of {{cars.length}} items</p>
+
+            <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
 
         </div>
-        <p>{{cars.length}} items</p>
-        <div class="card-footer pb-0 pt-3">
-            <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
+        <div class="col-md-4">
+            <!-- Your second column here -->
+            <h4 class="text-center">Recent events</h4>
+
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Event name</th>
+                        <th class="text-center">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let event of events.reverse()">
+                        <td *ngIf="event.status=='notice'">{{event.message}}</td>
+                        <td *ngIf="event.status=='normal'" class="table-success">{{event.message}}</td>
+                        <td *ngIf="event.status=='error'" class="table-danger">{{event.message}}</td>
+                        <td class="text-right">{{event.status}}</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+
+
 </div>

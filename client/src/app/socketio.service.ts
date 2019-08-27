@@ -5,7 +5,7 @@ import * as io from "socket.io-client";
 
 @Injectable()
 export class SocketioService {
-  private socket; // socket that connects to our socket.io server
+  private socket: SocketIOClient.Socket; // socket that connects to our socket.io server
   constructor(private us: UserService) {}
 
   connect(): Observable<any> {
@@ -17,7 +17,7 @@ export class SocketioService {
       // second is invoked if an error occurred
 
       this.socket.on("broadcast", m => {
-        console.log("Socket.io message received: " + JSON.stringify(m));
+        console.log("Socket.io an event occurred: " + JSON.stringify(m));
         observer.next(m);
       });
 
