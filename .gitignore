@@ -4,3 +4,6 @@
 express/data/
 
 express/keys/
+
+simulation/.ipynb_checkpoints/
+simulation/data/
