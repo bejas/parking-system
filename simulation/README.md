@@ -6,7 +6,7 @@ Here we can simulate the system.
 
 ## Installation
 
-The alpr system used is OpenALPR https://github.com/openalpr/openalpr. Installation was tested on MAC OSX version 10.14.6 with the following commands, thanks to https://github.com/openalpr/openalpr/issues/658.
+The alpr system used is [openalpr](https://github.com/openalpr/openalpr). Installation was tested on MAC OSX version 10.14.6 with the following commands, thanks to https://github.com/openalpr/openalpr/issues/658.
 
 ```bash
 brew install tesseract opencv@3 log4cplus
