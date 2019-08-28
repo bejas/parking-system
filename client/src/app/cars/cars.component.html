@@ -147,15 +147,21 @@
                 <thead>
                     <tr>
                         <th>Event name</th>
-                        <th class="text-center">Date</th>
+                        <th class="text-center">Plate</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let event of events.reverse()">
-                        <td *ngIf="event.status=='notice'">{{event.message}}</td>
-                        <td *ngIf="event.status=='normal'" class="table-success">{{event.message}}</td>
-                        <td *ngIf="event.status=='error'" class="table-danger">{{event.message}}</td>
-                        <td class="text-right">{{event.status}}</td>
+                        <td *ngIf="event.status=='notice'">
+                            <font color="gray">{{event.message}}</font>
+                        </td>
+                        <td *ngIf="event.status=='success'">
+                            <font color="green">{{event.message}}</font>
+                        </td>
+                        <td *ngIf="event.status=='error'">
+                            <font color="red">{{event.message}}</font>
+                        </td>
+                        <td class="text-right">{{event.plate}}</td>
                     </tr>
                 </tbody>
             </table>

@@ -160,10 +160,9 @@ app.route("/cars")
                                     "Inserted: " + JSON.stringify(req.body)
                                 );
                                 ios.emit("broadcast", {
-                                    message:
-                                        insertedCar.plate +
-                                        " Entered the parking.",
-                                    status: "notice"
+                                    message: "Entered the parking",
+                                    status: "notice",
+                                    plate: insertedCar.plate
                                 });
                                 return res.status(200).json({
                                     error: false,
@@ -217,8 +216,9 @@ app.patch("/cars/:plate", auth, (req, res, next) => {
                 firstCar.timestamp_out = new Date();
                 firstCar.save();
                 ios.emit("broadcast", {
-                    message: firstCar.plate + " Is exiting now.",
-                    status: "notice"
+                    message: "Is exiting now",
+                    status: "notice",
+                    plate: firstCar.plate
                 });
                 res.status(200).json({
                     error: false,
@@ -226,8 +226,9 @@ app.patch("/cars/:plate", auth, (req, res, next) => {
                 });
             } else {
                 ios.emit("broadcast", {
-                    message: firstCar.plate + " Tried to exit without paying.",
-                    status: "error"
+                    message: "Tried to exit without paying!",
+                    status: "error",
+                    plate: firstCar.plate
                 });
                 res.status(402).json({
                     error: true,
@@ -307,8 +308,9 @@ app.post("/payment/:plate", (req, res, next) => {
             if (result) {
                 firstCar.save();
                 ios.emit("broadcast", {
-                    message: firstCar.plate + " Completed payment.",
-                    status: "normal"
+                    message: "Completed payment",
+                    status: "success",
+                    plate: firstCar.plate
                 });
                 return res.status(200).json({
                     error: false,
