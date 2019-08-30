@@ -23,10 +23,10 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.get_users();
-    this.sio.connect().subscribe(m => {
-      console.log(m); //
-      this.get_users();
-    });
+    // this.sio.connect().subscribe(m => {
+    //   console.log(m); //
+    //   //this.get_users();
+    // });
   }
 
   public setModalIndex(username) {

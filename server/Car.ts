@@ -59,9 +59,9 @@ carSchema.methods.makePayment = function() {
 };
 
 carSchema.methods.getAmountToPay = function() {
-    // Price for every minute.
-    const unitPrice = 1.17;
-    const minutesToExit = 1;
+    // For simulation purposes we make time to exit 10 seconds and charge every 10 seconds
+    const unitPrice = 0.5;
+    const timeToExit = 10;
 
     if (this.timestamp_out) {
         return 0;
@@ -69,20 +69,26 @@ carSchema.methods.getAmountToPay = function() {
 
     if (!this.timestamp_payment) {
         // payment has not made
-        var difference = this.timestamp_in.getTime() - new Date().getTime();
-        var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
-        return (differenceMinutes * unitPrice).toFixed(2);
+        var difference = new Date().getTime() - this.timestamp_in.getTime();
+        difference = Math.round(difference / 1000) - timeToExit;
+
+        // first 10 seconds are free
+        if (difference > 0) {
+            return (Math.ceil(difference / 10) * unitPrice).toFixed(2);
+        } else {
+            return 0;
+        }
     } else {
         // payment has made
         var difference =
-            this.timestamp_payment.getTime() - new Date().getTime();
-        var differenceMinutes = Math.abs(Math.round(difference / 1000 / 60));
+            new Date().getTime() - this.timestamp_payment.getTime();
+        difference = Math.round(difference / 1000) - timeToExit;
 
-        if (differenceMinutes > minutesToExit) {
-            // 10 minutes elapsed
-            return ((differenceMinutes - minutesToExit) * unitPrice).toFixed(2);
+        if (difference > 0) {
+            // time to exit elapsed
+            return (Math.ceil(difference / 10) * unitPrice).toFixed(2);
         } else {
-            // 10 minutes not elapsed
+            // time to exit not elapsed
             return 0;
         }
     }

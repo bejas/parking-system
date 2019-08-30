@@ -442,7 +442,7 @@ app.get("/renew", auth, (req, res, next) => {
     delete tokendata.exp;
     console.log("Renewing token for user " + JSON.stringify(tokendata));
     var token_signed = jsonwebtoken.sign(tokendata, process.env.JWT_SECRET, {
-        expiresIn: "30m"
+        expiresIn: "60m"
     });
     return res.status(200).json({
         error: false,
@@ -510,7 +510,7 @@ app.get(
         var token_signed = jsonwebtoken.sign(
             tokendata,
             process.env.JWT_SECRET,
-            { expiresIn: "30m" }
+            { expiresIn: "60m" }
         );
 
         return res.status(200).json({

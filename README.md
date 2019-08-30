@@ -4,9 +4,7 @@ An automated car parking system.
 
 ## Installation
 
-You can build and run both client and server side following their respective instructions.
-
-Easy way is to run this script.
+You can build and run both client and server side following their respective instructions or you can simply run the script.
 
 ```bash
 bash compile_and_run.sh

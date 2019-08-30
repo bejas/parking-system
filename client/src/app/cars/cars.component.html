@@ -127,7 +127,8 @@
                         <td>{{car.plate}}</td>
                         <td>{{car.timestamp_in | date}} - {{car.timestamp_in | date:'shortTime'}}</td>
                         <td>{{car.timestamp_out | date}} - {{car.timestamp_out | date:'shortTime'}}</td>
-                        <td>{{car.amountToPay}}</td>
+                        <td *ngIf="!car.timestamp_out">{{car.amountToPay}}</td>
+                        <td *ngIf="car.timestamp_out"><i class="fas fa-check-circle" style="color: limegreen"></i></td>
 
 
                     </tr>

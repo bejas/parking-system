@@ -61,10 +61,6 @@ export class CarsComponent implements OnInit {
     });
   }
 
-  //{ limit: "10", skip: "0" }
-
-  private socket_handler(m) {}
-
   public get_cars() {
     this.cs.get_cars(this.queryParams).subscribe(
       cars => {
