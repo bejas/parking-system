@@ -45,68 +45,6 @@
         </div>
     </nav>
 
-    <!-- <div class="card text-center m-3">
-                <h3 class="card-header">TITLE</h3>
-                <div class="card-body">
-                    <div *ngFor="let car of pageOfItems" class="card mx-auto" style="margin: 10px; width: 350px; ">
-
-                        <div class="card-header">
-                            <table style="width:100%">
-                                <tr>
-                                    <td style="text-align: left"><i class="fas fa-car carimg"></i></td>
-                                    <td style="text-align: right;">
-                                        <h5><b>{{car.plate}}</b></h5>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item">
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="text-align: left"><i class="fas fa-donate"></i></td>
-                                        <td style="text-align: right">
-                                            <ng-container
-                                                *ngIf="car.amountToPay != 0; then stillNotPaid; else alreadyPaid">
-                                            </ng-container>
-                                            <ng-template #stillNotPaid>€ {{car.amountToPay}}</ng-template>
-                                            <ng-template #alreadyPaid><i class="fas fa-check-circle"
-                                                    style="color: limegreen"></i>
-                                            </ng-template>
-                                        </td>
-                                    </tr>
-                                </table>
-                            </li>
-                            <li class="list-group-item">
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="text-align: left"><i class="fas fa-sign-in-alt"></i></td>
-                                        <td style="text-align: right">{{car.timestamp_in | date}} -
-                                            {{car.timestamp_in | date:'shortTime'}}</td>
-                                    </tr>
-                                </table>
-                            </li>
-                            <li class="list-group-item">
-                                <table style="width:100%">
-                                    <tr>
-                                        <td style="text-align: left"><i class="fas fa-sign-out-alt"></i></td>
-                                        <td style="text-align: right">{{car.timestamp_out | date}} -
-                                            {{car.timestamp_out | date:'shortTime'}}</td>
-                                    </tr>
-                                </table>
-                            </li>
-                        </ul>
-
-                    </div>
-
-                </div>
-                <p>{{cars.length}} items</p>
-                <div class="card-footer pb-0 pt-3">
-                    <jw-pagination [items]="cars" (changePage)="onChangePage($event)"></jw-pagination>
-                </div> -->
-
-
 
     <div class="modal-body row">
         <div class="col-md-8">
@@ -127,8 +65,9 @@
                         <td>{{car.plate}}</td>
                         <td>{{car.timestamp_in | date}} - {{car.timestamp_in | date:'shortTime'}}</td>
                         <td>{{car.timestamp_out | date}} - {{car.timestamp_out | date:'shortTime'}}</td>
-                        <td *ngIf="!car.timestamp_out">{{car.amountToPay}}</td>
-                        <td *ngIf="car.timestamp_out"><i class="fas fa-check-circle" style="color: limegreen"></i></td>
+                        <td *ngIf="!car.timestamp_out">€ {{car.amountToPay}}</td>
+                        <td *ngIf="car.timestamp_out" class="highlight"><i class="fas fa-check-circle"
+                                style="color: limegreen"></i></td>
 
 
                     </tr>

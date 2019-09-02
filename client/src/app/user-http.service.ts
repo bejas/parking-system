@@ -19,7 +19,6 @@ export class UserHttpService {
 
   public token = "";
   public url = "http://localhost:8080";
-  //public url = "http://192.168.1.50:8080";
 
   login(mail: string, password: string, remember: boolean): Observable<any> {
     console.log("Login: " + mail + " " + password);

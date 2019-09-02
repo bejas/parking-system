@@ -11,7 +11,6 @@ import { RouterModule } from "@angular/router";
 
 // Services
 import { LoggerService } from "./logger.service";
-import { AdminPanelComponent } from "./admin-panel/admin-panel.component";
 import { CarsComponent } from "./cars/cars.component";
 import { UserService } from "./user.service";
 import { UserHttpService } from "./user-http.service";
@@ -26,7 +25,6 @@ import { UsersComponent } from "./users/users.component";
     AppComponent,
     UserLoginComponent,
     PaymentComponent,
-    AdminPanelComponent,
     CarsComponent,
     PaymentInfoComponent,
     JwAngularPaginationComponent,

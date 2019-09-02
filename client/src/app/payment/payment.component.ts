@@ -14,8 +14,4 @@ export class PaymentComponent implements OnInit {
   getCar(plateNumber: string) {
     this.router.navigate(["/payment/" + plateNumber]);
   }
-
-  // userLogin() {
-  //   this.router.navigate(["/login"]);
-  // }
 }

@@ -19,7 +19,6 @@ export class CarHttpService {
   }
 
   public url = "http://localhost:8080";
-  //public url = "http://192.168.1.50:8080";
 
   getCarInfo(plate: string): Observable<Car> {
     console.log("Get car info for plate: " + plate);
@@ -65,14 +64,13 @@ export class CarHttpService {
       params: new HttpParams({ fromObject: params })
     };
   }
-  //{ limit: "10", skip: "0" }
 
   get_cars(params = {}): Observable<Car[]> {
     return this.http
       .get<Car[]>(this.us.url + "/cars", this.create_options(params))
       .pipe(
         tap(data => {
-          console.log(JSON.stringify(data));
+          // console.log(JSON.stringify(data));
         })
       );
   }

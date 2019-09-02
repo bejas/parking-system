@@ -23,10 +23,6 @@ export class UsersComponent implements OnInit {
 
   ngOnInit() {
     this.get_users();
-    // this.sio.connect().subscribe(m => {
-    //   console.log(m); //
-    //   //this.get_users();
-    // });
   }
 
   public setModalIndex(username) {
@@ -38,9 +34,6 @@ export class UsersComponent implements OnInit {
   }
 
   public get_users() {
-    // setInterval(() => {
-    //   console.log(this.modalEditIndex);
-    // }, 1000);
     this.us.get_users().subscribe(
       users => {
         this.users = users;
@@ -71,7 +64,7 @@ export class UsersComponent implements OnInit {
   }
 
   add_user(checkboxes: { admin: boolean; moderator: boolean }) {
-    // Add roles.
+    // Add roles
     if (checkboxes.admin) {
       this.newUser.roles.push("ADMIN");
     }

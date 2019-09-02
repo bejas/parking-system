@@ -38,7 +38,6 @@ export class CarsComponent implements OnInit {
 
   onChangePage(pageOfItems: Array<Car>) {
     // update current page of items
-    console.log(pageOfItems);
     this.pageOfItems = pageOfItems;
   }
 

@@ -42,3 +42,5 @@ rm baza_slika.zip
 ```
 
 ## Usage
+
+Run the python script to simulate events.
