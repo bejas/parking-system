@@ -53,7 +53,7 @@ export class CarsComponent implements OnInit {
     this.sio.connect().subscribe(m => {
       //console.log(m); //
       this.events.push(m);
-      if (this.events.length > 18) {
+      if (this.events.length > 19) {
         this.events.shift();
       }
       this.get_cars();

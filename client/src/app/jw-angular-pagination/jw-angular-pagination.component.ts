@@ -55,7 +55,7 @@ export class JwAngularPaginationComponent implements OnInit, OnChanges {
   @Input() items: Array<any>;
   @Output() changePage = new EventEmitter<any>(true);
   @Input() initialPage = 1;
-  @Input() pageSize = 18;
+  @Input() pageSize = 19;
   @Input() maxPages = 10;
 
   pager: any = {};

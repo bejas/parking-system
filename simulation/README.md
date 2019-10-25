@@ -39,6 +39,9 @@ mkdir data && cd data
 wget http://www.zemris.fer.hr/projects/LicensePlates/english/baza_slika.zip
 unzip baza_slika.zip
 rm baza_slika.zip
+sudo chmod -R 764 .
+find . -name "*jpg" -mindepth 1 -exec mv {} ./ \;
+rm -r 141002 170902 180902 210503 280503 070603 040603
 ```
 
 ## Usage
