@@ -9,22 +9,22 @@ import { Router, ActivatedRoute } from "@angular/router";
 @Component({
   selector: "app-cars",
   templateUrl: "./cars.component.html",
-  styleUrls: ["./cars.component.css"]
+  styleUrls: ["./cars.component.css"],
 })
 export class CarsComponent implements OnInit {
-  private cars: Car[] = [];
-  private events: string[] = [];
-  public queryParams;
-  private pageOfItems: Array<Car> = [];
+  cars: Car[] = [];
+  events: string[] = [];
+  queryParams;
+  pageOfItems: Array<Car> = [];
 
   constructor(
     private sio: SocketioService,
     private cs: CarHttpService,
-    private us: UserService,
+    public us: UserService,
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = function() {
+    this.router.routeReuseStrategy.shouldReuseRoute = function () {
       return false;
     };
   }
@@ -50,7 +50,7 @@ export class CarsComponent implements OnInit {
     //   this.get_cars();
     // }, 1000);
 
-    this.sio.connect().subscribe(m => {
+    this.sio.connect().subscribe((m) => {
       //console.log(m); //
       this.events.push(m);
       if (this.events.length > 19) {
@@ -62,17 +62,17 @@ export class CarsComponent implements OnInit {
 
   public get_cars() {
     this.cs.get_cars(this.queryParams).subscribe(
-      cars => {
+      (cars) => {
         this.cars = cars;
       },
-      err => {
+      (err) => {
         // Try to renew the token
         this.us.renew().subscribe(
           () => {
             // Succeeded
             this.get_cars();
           },
-          err2 => {
+          (err2) => {
             // Error again, we really need to logout
             this.logout();
           }
@@ -84,7 +84,7 @@ export class CarsComponent implements OnInit {
   search(plate) {
     if (this.route.snapshot.queryParams.inside == "true") {
       this.router.navigate(["/cars"], {
-        queryParams: { plate: plate, inside: true }
+        queryParams: { plate: plate, inside: true },
       });
     } else {
       this.router.navigate(["/cars"], { queryParams: { plate: plate } });

@@ -5,7 +5,7 @@ import {
   EventEmitter,
   OnInit,
   OnChanges,
-  SimpleChanges
+  SimpleChanges,
 } from "@angular/core";
 
 declare var require: any;
@@ -49,7 +49,7 @@ var paginate = require("jw-paginate");
         <a (click)="setPage(pager.totalPages)" class="page-link">Last</a>
       </li>
     </ul>
-  `
+  `,
 })
 export class JwAngularPaginationComponent implements OnInit, OnChanges {
   @Input() items: Array<any>;
@@ -74,7 +74,7 @@ export class JwAngularPaginationComponent implements OnInit, OnChanges {
     }
   }
 
-  private setPage(page: number) {
+  setPage(page: number) {
     // get new pager object for specified page
     this.pager = paginate(
       this.items.length,

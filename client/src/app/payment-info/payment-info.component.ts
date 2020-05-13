@@ -5,20 +5,20 @@ import { CarHttpService } from "../car-http.service";
 @Component({
   selector: "app-payment-info",
   templateUrl: "./payment-info.component.html",
-  styleUrls: ["./payment-info.component.css"]
+  styleUrls: ["./payment-info.component.css"],
 })
 export class PaymentInfoComponent implements OnInit {
-  private plate: string;
-  private car;
+  plate: string;
+  car;
 
   constructor(
     private route: ActivatedRoute,
     private cs: CarHttpService,
     private router: Router
   ) {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.plate = params.plate;
-      this.cs.getCarInfo(this.plate).subscribe(data => (this.car = data));
+      this.cs.getCarInfo(this.plate).subscribe((data) => (this.car = data));
     });
   }
 
@@ -26,7 +26,7 @@ export class PaymentInfoComponent implements OnInit {
 
   makePayment() {
     console.log("p");
-    this.cs.makePayment(this.car.plate).subscribe(data => {
+    this.cs.makePayment(this.car.plate).subscribe((data) => {
       console.log(JSON.stringify(data));
       setTimeout(() => {
         location.reload();
